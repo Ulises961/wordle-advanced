@@ -1,10 +1,11 @@
 import {
   CLOSE_DRAWER,
   CLOSE_VIEW,
-  DELETE,
   ENTER,
   Game,
-  INSERT,
+  gameEnum,
+  GAME_TYPE,
+  INS_DEL,
   Letter,
   START_NEW_DORDLE,
   START_NEW_WORDLE,
@@ -13,29 +14,23 @@ import {
 
 export interface CloseDrawerAction {
   type: typeof CLOSE_DRAWER;
-  payload: undefined;
+  payload: { isOpen: boolean };
 }
 export interface CloseSettingAction {
   type: typeof CLOSE_VIEW;
-  payload: undefined;
+  payload: { isOpen: boolean };
 }
 export interface StartNewDordleAction {
   type: typeof START_NEW_DORDLE;
   payload: Game[];
 }
-
 export interface StartNewWordleAction {
   type: typeof START_NEW_WORDLE;
   payload: Game;
 }
-export interface InsertLetterAction {
-  type: typeof INSERT;
-  payload: Letter;
-}
-
-export interface DeleteLetterAction {
-  type: typeof DELETE;
-  payload: Letter;
+export interface InsertDeleteLetterAction {
+  type: typeof INS_DEL;
+  payload: { attempt: Letter[]; slot: number };
 }
 
 export interface PressEnterAction {
@@ -56,12 +51,18 @@ export interface UpdateKeyboardAction {
   };
 }
 
+export interface GameType {
+  type: typeof GAME_TYPE;
+  payload: gameEnum;
+}
+
+
 export type GameAction =
   | PressEnterAction
-  | DeleteLetterAction
-  | InsertLetterAction
+  | InsertDeleteLetterAction
   | StartNewDordleAction
   | StartNewWordleAction
   | CloseDrawerAction
   | CloseSettingAction
+  | GameType
   | UpdateKeyboardAction;

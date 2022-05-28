@@ -15,7 +15,6 @@ import {
 } from '../../utils/types';
 import { ActionCreator } from 'redux';
 import { GameAction } from '../types/action.types';
-import { Keyboard } from 'react-native';
 
 export const StartNewWordle: ActionCreator<GameAction> = ({
   mode,

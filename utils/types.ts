@@ -46,12 +46,17 @@ export enum mode {
   'normal',
 }
 
+export enum gameEnum {
+  'wordle',
+  'dordle',
+  'quit',
+}
 export const UPDATE_GAME = 'UPDATE_GAME';
 export const START_NEW_WORDLE = 'START_NEW_WORDLE';
 export const START_NEW_DORDLE = 'START_NEW_DORDLE';
-export const DELETE = 'DELETE';
+export const GAME_TYPE = 'GAME_TYPE';
 export const ENTER = 'ENTER';
-export const INSERT = 'INSERT';
+export const INS_DEL = 'INSERT_DELETE_LETTER';
 export const CLOSE_VIEW = 'CLOSE_VIEW';
 export const CLOSE_DRAWER = 'CLOSE_DRAWER';
 export const UPDATE_KEYBOARD = 'UPDATE_KEYBOARD';
