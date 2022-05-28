@@ -11,7 +11,7 @@ import {answers} from '../assets/answers';
 import BackButton from '../elements/BackButton';
 import InputRow from '../elements/InputRow';
 import Key from '../elements/Key';
-import {LeftArrow, ReturnKey, RightArrow} from '../elements/specialKeys';
+import {LeftArrow, ReturnKey, RightArrow} from '../utils/specialKeys';
 import {emptyNumber, parseNumber} from '../utils/lib';
 import {mode, Letter, Reset} from '../utils/types';
 import {Keypad} from './Keyboard';

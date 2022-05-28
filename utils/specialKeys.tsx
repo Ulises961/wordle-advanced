@@ -1,4 +1,4 @@
-import {Letter, Reset} from '../utils/types';
+import {Letter, Reset} from './types';
 
 export const BackSpaceKey: Letter = {
   character: '\u232B',

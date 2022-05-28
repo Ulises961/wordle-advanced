@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, ViewStyle, StyleProp} from 'react-native';
 import {colorKeyboard, generateCharArray, markLetterAsTried, querty} from '../utils/lib';
-import {BackSpaceKey, EmptyKey, ReturnKey} from '../elements/specialKeys';
+import {BackSpaceKey, EmptyKey, ReturnKey} from '../utils/specialKeys';
 import {Letter, Reset} from '../utils/types';
 import KeyRows from '../elements/KeyRows';
 

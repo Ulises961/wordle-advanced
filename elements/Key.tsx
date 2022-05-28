@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { BackSpaceKey, ReturnKey } from './specialKeys';
+import { BackSpaceKey, ReturnKey } from '../utils/specialKeys';
 import React from 'react';
 import { Letter } from '../utils/types';
 export const Key = ({

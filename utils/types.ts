@@ -38,10 +38,20 @@ export type predicateFunction<A, B> = (arg1: A, arg2: B) => Boolean;
 export type filterFunction<A, B> = (
   arg1: A,
   arg2: B,
-  arg3: predicateFunction<A, A>,
+  arg3: predicateFunction<A, A>
 ) => A[];
 
 export enum mode {
   'hard',
   'normal',
 }
+
+export const UPDATE_GAME = 'UPDATE_GAME';
+export const START_NEW_WORDLE = 'START_NEW_WORDLE';
+export const START_NEW_DORDLE = 'START_NEW_DORDLE';
+export const DELETE = 'DELETE';
+export const ENTER = 'ENTER';
+export const INSERT = 'INSERT';
+export const CLOSE_VIEW = 'CLOSE_VIEW';
+export const CLOSE_DRAWER = 'CLOSE_DRAWER';
+export const UPDATE_KEYBOARD = 'UPDATE_KEYBOARD';

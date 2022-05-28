@@ -1,16 +1,14 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native';
 import BackButton from '../elements/BackButton';
 import Button from '../elements/Button';
-import {Game, mode} from '../utils/types';
+import { Game, mode } from '../utils/types';
 import AnswerSetter from './AnswerSetter';
 import Help from './Help';
 import Stats from './Stats';
@@ -123,7 +121,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 2,
   },
-  scrollviewStyle: {alignItems: 'center', justifyContent: 'center'},
+  scrollviewStyle: { alignItems: 'center', justifyContent: 'center' },
 
   button: {
     marginBottom: 30,
