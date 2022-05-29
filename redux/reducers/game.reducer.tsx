@@ -5,10 +5,9 @@ import { GameState } from '../types/state.types';
 const initialGameState: GameState = {
   currentGame: [undefined],
   gameHistory: [],
-  isDordle: false,
 };
 
-export function reducer(
+export function gameReducer(
   state: GameState = initialGameState,
   action: GameAction
 ): GameState {
@@ -18,13 +17,12 @@ export function reducer(
         currentGame: [action.payload],
         gameHistory: [...state.gameHistory, ...state.currentGame],
 
-        isDordle: false,
       };
     case START_NEW_DORDLE:
       return {
         currentGame: [...action.payload],
         gameHistory: [...state.gameHistory, ...state.currentGame],
-        isDordle: true,
+
       };
     case ENTER:
       const toHistory = action.payload.toHistory

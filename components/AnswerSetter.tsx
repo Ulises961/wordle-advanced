@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Switch,
@@ -7,117 +7,99 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {answers} from '../assets/answers';
+import { answers } from '../assets/answers';
 import BackButton from '../elements/BackButton';
 import InputRow from '../elements/InputRow';
 import Key from '../elements/Key';
-import {LeftArrow, ReturnKey, RightArrow} from '../utils/specialKeys';
-import {emptyNumber, parseNumber} from '../utils/lib';
-import {mode, Letter, Reset} from '../utils/types';
-import {Keypad} from './Keyboard';
+import { LeftArrow, ReturnKey, RightArrow } from '../utils/specialKeys';
+import { emptyNumber, parseNumber } from '../utils/lib';
+import { mode, Letter, Reset, gameEnum, CLOSE_DRAWER } from '../utils/types';
+import { Keypad } from './Keyboard';
+import { useSelector } from 'react-redux';
+import rootReducer, { RootState } from '../redux/combineReducer';
+import { useDispatch } from 'react-redux';
+import {
+  clearNumberInput,
+  deleteLetter,
+  deleteNumber,
+  insertNumber,
+  setCursorToStart,
+  toggleDrawer,
+} from '../redux/actions/app.actions';
+import { startGame, StartNewDordle } from '../redux/actions/game.actions';
 
-const AnswerSetter = ({
-  onClose,
-  onChooseAnswer,
-  onCloseDrawerAltogether,
-  isWordle,
-}: {
-  onClose: () => void;
-  onCloseDrawerAltogether: () => void;
-  onChooseAnswer: (
-    difficultyMode: mode,
-    index: number,
-    secondIndex?: number,
-  ) => void;
-  isWordle: boolean;
-}): JSX.Element => {
+const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
   const screenWidth = useWindowDimensions().width;
-  const keypad: ViewStyle = {flex: 8, width: screenWidth};
-
-  const [numberEntered, setNumberEntered] = useState<Letter[]>(emptyNumber);
-  const [secondNumberEntered, setSecondNumberEntered] =
-    useState<Letter[]>(emptyNumber);
-
+  const keypad: ViewStyle = { flex: 8, width: screenWidth };
   const [isFirst, setIsFirst] = useState<boolean>(true);
+  // const currentIndex = numberEntered.findIndex((slot) => {
+  //   return slot.character.localeCompare(' ') === 0;
+  // });
+  // const [currentSlot, setCurrentSlot] = useState<number>(currentIndex);
 
-  const currentIndex = numberEntered.findIndex(slot => {
-    return slot.character.localeCompare(' ') === 0;
-  });
+  const {
+    currentSlot,
+    gameType,
+    drawerOpen,
+    attempt,
+    answerIndex,
+    secondAnswerIndex,
+  } = useSelector((state: RootState) => state.app);
+  const dispatch = useDispatch();
 
-  const [currentSlot, setCurrentSlot] = useState<number>(currentIndex);
-
+  // const [numberEntered, setNumberEntered] = useState<Letter[]>(emptyNumber);
+  // const [secondNumberEntered, setSecondNumberEntered] =
+  //   useState<Letter[]>(emptyNumber);
+  console.log('answer index', answerIndex);
+  console.log('second answer index', secondAnswerIndex);
+  const isWordle = gameType === gameEnum.wordle;
   const keyPressHandler = (letter: Letter) => {
     switch (letter.character) {
       //backspace
       case '\u232B':
-        deleteLetter();
+        dispatch(deleteNumber(currentSlot, attempt, isFirst));
         break;
       //return key
       case '\u23CE':
-        onChooseAnswer(
-          difficultyMode,
-          parseNumber(numberEntered),
-          parseNumber(secondNumberEntered),
+        dispatch(
+          startGame(parseNumber(answerIndex), parseNumber(secondAnswerIndex))
         );
-
+  
         onClose();
-        onCloseDrawerAltogether();
 
         break;
+
       case 'Next':
         setIsFirst(false);
-        setCurrentSlot(0);
+        dispatch(setCursorToStart());
         break;
+
       case 'Previous':
         setIsFirst(true);
-        setSecondNumberEntered(emptyNumber);
-        setCurrentSlot(0);
+        dispatch(clearNumberInput());
+        dispatch(setCursorToStart());
         break;
+
       default:
-        insertLetter(letter);
+        dispatch(insertNumber(letter, currentSlot, attempt, isFirst));
     }
   };
-  const deleteLetter = () => {
-    if (currentSlot < 0) {
-      return;
-    }
-    const updatedAttempt = isFirst
-      ? [...numberEntered]
-      : [...secondNumberEntered];
-    if (currentSlot > 0) {
-      setCurrentSlot(currentSlot - 1);
-      updatedAttempt[currentSlot - 1] = {
-        character: ' ',
-        index: 0,
-        color: Reset,
-      };
-    } else {
-      updatedAttempt[currentSlot] = {
-        character: ' ',
-        index: 0,
-        color: Reset,
-      };
-    }
+  // const deleteNumber = () => {};
 
-    isFirst
-      ? setNumberEntered(updatedAttempt)
-      : setSecondNumberEntered(updatedAttempt);
-  };
-
-  const insertLetter = (letter: Letter): void => {
-    if (currentSlot >= 4) {
-      return;
-    }
-    const letterWithIndex: Letter = {...letter, index: currentSlot};
-    const updatedAttempt = isFirst
-      ? [...numberEntered]
-      : [...secondNumberEntered];
-    updatedAttempt[currentSlot] = letterWithIndex;
-    isFirst
-      ? setNumberEntered(updatedAttempt)
-      : setSecondNumberEntered(updatedAttempt);
-    setCurrentSlot(currentSlot + 1);
-  };
+  // const insertLetter = (letter: Letter): void => {
+  //   if (currentSlot >= 4) {
+  //     return;
+  //   }
+  //   const letterWithIndex: Letter = { ...letter, index: currentSlot };
+  //   const updatedAttempt = isFirst
+  //     ? [...numberEntered]
+  //     : [...secondNumberEntered];
+  //   updatedAttempt[currentSlot] = letterWithIndex;
+  //   isFirst
+  //     ? setNumberEntered(updatedAttempt)
+  //     : setSecondNumberEntered(updatedAttempt);
+  //   setCurrentSlot(currentSlot + 1);
+  // };
   const [difficultyMode, setDifficultyMode] = useState<mode>(mode.normal);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const setModeHandler = (value: boolean): void => {
@@ -137,19 +119,16 @@ const AnswerSetter = ({
         <View style={styles.switchGroup}>
           <Text style={styles.label}>Hard Mode</Text>
           <Switch
-            onValueChange={value => setModeHandler(value)}
+            onValueChange={(value) => setModeHandler(value)}
             value={isEnabled}
             accessibilityLabel="hardmode"
             style={styles.switch}
           />
         </View>
       )}
-      <InputRow
-        currentAttempt={isFirst ? numberEntered : secondNumberEntered}
-      />
+      <InputRow currentAttempt={attempt} />
       <View>
-        {answers[parseNumber(isFirst ? numberEntered : secondNumberEntered)] ===
-        undefined ? (
+        {answers[parseNumber(attempt)] === undefined ? (
           <Text style={styles.bold}>
             No such index, we will choose a random answer
           </Text>
@@ -158,13 +137,7 @@ const AnswerSetter = ({
             <Text style={styles.regularText}>
               The answer you are choosing is{' '}
             </Text>
-            <Text style={styles.bold}>
-              {
-                answers[
-                  parseNumber(isFirst ? numberEntered : secondNumberEntered)
-                ]
-              }
-            </Text>
+            <Text style={styles.bold}>{answers[parseNumber(attempt)]}</Text>
           </View>
         )}
       </View>

@@ -6,24 +6,24 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import BackButton from '../elements/BackButton';
 import Button from '../elements/Button';
-import { Game, mode } from '../utils/types';
+import { chooseGame, toggleDrawer } from '../redux/actions/app.actions';
+import { RootState } from '../redux/combineReducer';
+import { Game, gameEnum, mode } from '../utils/types';
 import AnswerSetter from './AnswerSetter';
 import Help from './Help';
 import Stats from './Stats';
 
 const Settings = ({
-  closeSettings,
   startNewGame,
   gamesPlayed,
-  quitGame,
   isWordle,
 }: {
-  closeSettings: () => void;
   startNewGame: (gameMode: mode, index?: number) => void;
   gamesPlayed: Game[];
-  quitGame: () => void;
   isWordle: boolean;
 }) => {
   const screenWidth = useWindowDimensions().width;
@@ -35,6 +35,11 @@ const Settings = ({
     flex: 1,
     maxWidth: screenWidth,
   };
+
+  const dispatch = useDispatch();
+  const { drawerOpen, gameType } = useSelector((state: RootState) => state.app);
+  console.log('drawer is open', drawerOpen);
+  
   // console.log('Settings component');
 
   switch (showSetting) {
@@ -51,16 +56,14 @@ const Settings = ({
       return (
         <AnswerSetter
           onClose={() => chooseSettingHandler('')}
-          onChooseAnswer={startNewGame}
-          onCloseDrawerAltogether={closeSettings}
-          isWordle={isWordle}
         />
       );
-
     default:
       return (
         <View style={screen}>
-          <BackButton pressHandler={closeSettings} />
+          <BackButton
+            pressHandler={() => dispatch(toggleDrawer(!drawerOpen))}
+          />
           <View style={styles.main}>
             <ScrollView contentContainerStyle={styles.scrollviewStyle}>
               <Button
@@ -75,13 +78,13 @@ const Settings = ({
                 content={'Choose Answer'}
                 contentStyle={styles.buttonText}
               />
-              {isWordle && (
+              {gameType === gameEnum.wordle && (
                 <View>
                   <Button
                     style={styles.button}
                     pressHandler={() => {
                       startNewGame(mode.normal);
-                      closeSettings();
+                      dispatch(toggleDrawer(!drawerOpen));
                     }}
                     content={'Easy'}
                     contentStyle={styles.buttonText}
@@ -90,7 +93,7 @@ const Settings = ({
                     style={styles.button}
                     pressHandler={() => {
                       startNewGame(mode.hard);
-                      closeSettings();
+                      dispatch(toggleDrawer(!drawerOpen));
                     }}
                     content={'Hard'}
                     contentStyle={styles.buttonText}
@@ -105,7 +108,7 @@ const Settings = ({
               />
               <Button
                 style={styles.button}
-                pressHandler={quitGame}
+                pressHandler={() => dispatch(chooseGame(gameEnum.quit))}
                 content={'Quit'}
                 contentStyle={styles.buttonText}
               />

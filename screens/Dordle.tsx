@@ -12,6 +12,10 @@ import GameScreen from './GameScreen';
 import {newGame} from '../utils/lib';
 import Settings from '../components/Settings';
 import {Game, mode} from '../utils/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/combineReducer';
+import { useDispatch } from 'react-redux';
+import { toggleDrawer } from '../redux/actions/app.actions';
 
 const Dordle = ({
   keepPlaying,
@@ -35,23 +39,23 @@ const Dordle = ({
     setCurrentGames([createdGame1, createdGame2]);
   };
 
-  const [openSettings, setOpenSettings] = useState<boolean>(false);
+
+  const {drawerOpen} = useSelector((state:RootState)=> state.app)
+  const dispatch = useDispatch();
   // console.log('Dordle component');
 
-  return openSettings ? (
+  return drawerOpen ? (
     <View style={styles.container}>
       <Settings
-        closeSettings={() => setOpenSettings(false)}
         startNewGame={setNewGames}
         gamesPlayed={gamesPlayed}
-        quitGame={() => keepPlaying('No')}
         isWordle={false}
       />
     </View>
   ) : (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setOpenSettings(true)}>
+        <TouchableOpacity onPress={() =>dispatch(toggleDrawer(!drawerOpen))}>
           <Text style={styles.hamburger}>≡</Text>
         </TouchableOpacity>
       </View>

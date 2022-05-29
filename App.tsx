@@ -1,50 +1,36 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
+  ViewStyle,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
+import { chooseGame } from './redux/actions/app.actions';
+import { RootState } from './redux/combineReducer';
+import store from './redux/store';
+
 import Dordle from './screens/Dordle';
 import Wordle from './screens/Wordle';
 
-import {Game} from './utils/types';
+import { Game, gameEnum } from './utils/types';
 
 const App = () => {
   const screenWidth = useWindowDimensions().width;
   const screenHeight = useWindowDimensions().height;
-  const styles = StyleSheet.create({
-    text: {
-      fontSize: 30,
-      textAlign: 'center',
-      color: 'white',
-    },
-    button: {
-      backgroundColor: '#2196F3',
-      width: '75%',
-      alignSelf: 'center',
-      justifyContent: 'center',
-      flex: 1,
-      margin: 5,
-      padding: 5,
-    },
-    h1: {
-      fontWeight: 'bold',
-      fontSize: 35,
-      flex: 2,
-      textAlign: 'center',
-    },
-    empty: {
-      flex: 2,
-    },
-    main: {
-      height: screenHeight > screenWidth ? screenHeight : screenWidth,
-      margin: 20,
-      flex: 1,
-      justifyContent: 'space-around',
-    },
-  });
+  const main: ViewStyle = {
+    height: screenHeight > screenWidth ? screenHeight : screenWidth,
+    margin: 20,
+    flex: 1,
+    justifyContent: 'space-around',
+  };
+
+  const dispatch = useDispatch();
+  const { gameType } = useSelector((state: RootState) => state.app);
 
   const [gamesPlayed, setGamesPlayed] = useState<Game[]>([]);
 
@@ -61,8 +47,9 @@ const App = () => {
     }
   };
   // console.log('app.js');
-  switch (play) {
-    case 'wordle':
+
+  switch (gameType) {
+    case gameEnum.wordle:
       return (
         <Wordle
           keepPlaying={keepPlayingHandler}
@@ -70,7 +57,7 @@ const App = () => {
           addToHistory={addToHistoryHandler}
         />
       );
-    case 'dordle':
+    case gameEnum.dordle:
       return (
         <Dordle
           keepPlaying={keepPlayingHandler}
@@ -80,18 +67,20 @@ const App = () => {
       );
     default:
       return (
-        <View style={styles.main}>
+        <View style={main}>
           <Text style={styles.h1}>Welcome to Wordle</Text>
           <TouchableOpacity
-            onPress={() => keepPlayingHandler('wordle')}
-            style={styles.button}>
+            onPress={() => dispatch(chooseGame(gameEnum.wordle))}
+            style={styles.button}
+          >
             <View>
               <Text style={styles.text}>Play a Wordle</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => keepPlayingHandler('dordle')}
-            style={styles.button}>
+            onPress={() => dispatch(chooseGame(gameEnum.dordle))}
+            style={styles.button}
+          >
             <View>
               <Text style={styles.text}>Play a Dordle</Text>
             </View>
@@ -101,4 +90,38 @@ const App = () => {
       );
   }
 };
-export default App;
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 30,
+    textAlign: 'center',
+    color: 'white',
+  },
+  button: {
+    backgroundColor: '#2196F3',
+    width: '75%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    margin: 5,
+    padding: 5,
+  },
+  h1: {
+    fontWeight: 'bold',
+    fontSize: 35,
+    flex: 2,
+    textAlign: 'center',
+  },
+  empty: {
+    flex: 2,
+  },
+});
+
+const AppWrapper = () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
+export default AppWrapper;

@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import GameScreen from './GameScreen';
-import {newGame} from '../utils/lib';
+import { newGame } from '../utils/lib';
 import Settings from '../components/Settings';
-import {Game, mode} from '../utils/types';
+import { Game, mode } from '../utils/types';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/combineReducer';
+import { toggleDrawer } from '../redux/actions/app.actions';
 
 const Wordle = ({
   keepPlaying,
@@ -14,6 +18,9 @@ const Wordle = ({
   gamesPlayed: Game[];
   addToHistory: (game: Game) => void;
 }) => {
+  const dispatch = useDispatch();
+  const { drawerOpen } = useSelector((state: RootState) => state.app);
+
   const game = newGame(mode.normal);
   const [currentGame, setCurrentGame] = useState<Game[]>([game]);
 
@@ -22,23 +29,20 @@ const Wordle = ({
     setCurrentGame([createdGame]);
   };
 
-  const [openSettings, setOpenSettings] = useState<boolean>(false);
   // console.log('Wordle component');
 
-  return openSettings ? (
+  return drawerOpen ? (
     <View style={[styles.container, styles.navigationContainer]}>
       <Settings
-        closeSettings={() => setOpenSettings(false)}
         startNewGame={setNewGame}
         gamesPlayed={gamesPlayed}
-        quitGame={() => keepPlaying('No')}
         isWordle={true}
       />
     </View>
   ) : (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setOpenSettings(true)}>
+        <TouchableOpacity onPress={() => dispatch(toggleDrawer(true))}>
           <Text style={styles.hamburger}>≡</Text>
         </TouchableOpacity>
       </View>

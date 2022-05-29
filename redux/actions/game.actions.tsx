@@ -15,6 +15,8 @@ import {
 } from '../../utils/types';
 import { ActionCreator } from 'redux';
 import { GameAction } from '../types/action.types';
+import { Dispatch } from 'react';
+import { toggleDrawer } from './app.actions';
 
 export const StartNewWordle: ActionCreator<GameAction> = ({
   mode,
@@ -66,7 +68,7 @@ export function dispatchEnter(
   currentGame: Game[],
   isDordle: boolean
 ) {
-  return (dispatch) => {
+  return (dispatch:Dispatch<GameAction>) => {
     const isInputOk = processInput(attempt);
     let history: Game[] = [];
     const updatedGame = [...currentGame];
@@ -94,4 +96,14 @@ export function dispatchEnter(
     dispatch(keyboard, secondKeyboard);
     return dispatch(PressEnter(updatedGame, history, keyboard, secondKeyboard));
   };
+}
+
+export function startGame(isDordle:boolean, index?:number, secondIndex?:number){
+  return (dispatch:Dispatch<GameAction>)=>{
+  dispatch(toggleDrawer(false))
+  isDordle? 
+  dispatch(StartNewDordle(index, secondIndex)):
+  dispatch(StartNewWordle(index))
+}
+
 }

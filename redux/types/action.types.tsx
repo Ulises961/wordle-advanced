@@ -1,12 +1,15 @@
 import {
   CLOSE_DRAWER,
   CLOSE_VIEW,
+  CURSOR_TO_START,
   ENTER,
   Game,
   gameEnum,
   GAME_TYPE,
   INS_DEL,
   Letter,
+  SET_NUMBER,
+  SET_SECOND_NUMBER,
   START_NEW_DORDLE,
   START_NEW_WORDLE,
   UPDATE_KEYBOARD,
@@ -55,7 +58,18 @@ export interface GameType {
   type: typeof GAME_TYPE;
   payload: gameEnum;
 }
-
+export interface SetNumber {
+  type: typeof SET_NUMBER;
+  payload: {currentNumber: Letter[], slot: number};
+}
+export interface SetSecondNumber {
+  type: typeof SET_SECOND_NUMBER;
+  payload: {currentNumber: Letter[], slot: number};
+}
+export interface SetCursorToStart {
+  type: typeof CURSOR_TO_START;
+  payload: number;
+}
 
 export type GameAction =
   | PressEnterAction
@@ -65,4 +79,7 @@ export type GameAction =
   | CloseDrawerAction
   | CloseSettingAction
   | GameType
+  | SetNumber
+  | SetSecondNumber
+  | SetCursorToStart
   | UpdateKeyboardAction;

@@ -1,24 +1,28 @@
+import { emptyNumber } from '../../utils/lib';
 import {
-  CLOSE_VIEW,
   CLOSE_DRAWER,
   INS_DEL,
   GAME_TYPE,
   gameEnum,
+  SET_NUMBER,
+  CURSOR_TO_START,
+  SET_SECOND_NUMBER,
 } from '../../utils/types';
 import { GameAction } from '../types/action.types';
 import { AppState } from '../types/state.types';
 
 const initialAppState: AppState = {
   drawerOpen: false,
-  viewOpen: false,
   currentSlot: 0,
   keyboard: [],
   secondKeyboard: undefined,
   attempt: [],
-  gameType: gameEnum,
+  gameType: gameEnum.quit,
+  answerIndex: emptyNumber,
+  secondAnswerIndex: emptyNumber,
 };
 
-export function reducer(
+export default function appReducer(
   state: AppState = initialAppState,
   action: GameAction
 ): AppState {
@@ -30,22 +34,35 @@ export function reducer(
         attempt: action.payload.attempt,
       };
 
-    case CLOSE_VIEW:
-      return {
-        ...state,
-        viewOpen: action.payload.isOpen,
-      };
     case CLOSE_DRAWER:
       return {
         ...state,
         drawerOpen: action.payload.isOpen,
-        viewOpen: action.payload.isOpen,
       };
 
     case GAME_TYPE:
       return {
         ...state,
         gameType: action.payload,
+      };
+    case SET_NUMBER:
+      return {
+        ...state,
+        attempt: [...action.payload.currentNumber],
+        answerIndex: [...action.payload.currentNumber],
+        currentSlot: action.payload.slot,
+      };
+    case SET_SECOND_NUMBER:
+      return {
+        ...state,
+        attempt: [...action.payload.currentNumber],
+        answerIndex: [...action.payload.currentNumber],
+        currentSlot: action.payload.slot,
+      };
+    case CURSOR_TO_START:
+      return {
+        ...state,
+        currentSlot: action.payload,
       };
     default:
       return { ...state };
