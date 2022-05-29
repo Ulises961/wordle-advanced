@@ -1,9 +1,10 @@
-import { ENTER, START_NEW_DORDLE, START_NEW_WORDLE } from '../../utils/types';
+import { newGame } from '../../utils/lib';
+import { ENTER, mode, START_NEW_DORDLE, START_NEW_WORDLE } from '../../utils/types';
 import { GameAction } from '../types/action.types';
 import { GameState } from '../types/state.types';
 
 const initialGameState: GameState = {
-  currentGame: [undefined],
+  currentGame: [],
   gameHistory: [],
 };
 
@@ -26,8 +27,7 @@ export function gameReducer(
       };
     case ENTER:
       const toHistory = action.payload.toHistory
-        ? [...action.payload.toHistory]
-        : [undefined];
+
       return {
         ...state,
         gameHistory: [...state.gameHistory, ...toHistory],

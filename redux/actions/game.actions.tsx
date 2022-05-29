@@ -3,7 +3,7 @@ import {
   newGame,
   playGame,
   processInput,
-  querty,
+  qwerty,
 } from '../../utils/lib';
 import {
   ENTER,
@@ -16,7 +16,7 @@ import {
 import { ActionCreator } from 'redux';
 import { GameAction } from '../types/action.types';
 import { Dispatch } from 'react';
-import { toggleDrawer } from './app.actions';
+import { setClearInput, toggleDrawer } from './app.actions';
 
 export const StartNewWordle: ActionCreator<GameAction> = ({
   mode,
@@ -49,7 +49,7 @@ export const StartNewDordle: ActionCreator<GameAction> = ({
 export const PressEnter: ActionCreator<GameAction> = (
   updatedGame: Game[],
   keyboard: Letter[],
-  history?: Game[],
+  history: Game[],
   secondKeyboard?: Letter[]
 ) => {
   return {
@@ -68,20 +68,22 @@ export function dispatchEnter(
   currentGame: Game[],
   isDordle: boolean
 ) {
-  return (dispatch:Dispatch<GameAction>) => {
+  console.log('Current game is undefined', currentGame === undefined);
+
+  return (dispatch: Dispatch<GameAction>) => {
     const isInputOk = processInput(attempt);
     let history: Game[] = [];
-    const updatedGame = [...currentGame];
+    const updatedGame: Game[] = [];
 
     if (isInputOk) {
-      updatedGame[0] = playGame(attempt, updatedGame[0]);
+      updatedGame[0] = playGame(attempt, currentGame[0]);
 
       if (updatedGame[0].numberOfAttempts > 5 || updatedGame[0].guessed) {
         history = [...history, updatedGame[0]];
       }
 
       if (isDordle) {
-        updatedGame[1] = playGame(attempt, updatedGame[1]);
+        updatedGame[1] = playGame(attempt, currentGame[1]);
 
         if (updatedGame[1].numberOfAttempts > 5 || updatedGame[1].guessed) {
           history = [...history, updatedGame[1]];
@@ -89,21 +91,25 @@ export function dispatchEnter(
       }
     }
 
-    const keyboard = colorKeyboard(querty, updatedGame[0].lettersUsed);
+    const keyboard = colorKeyboard(qwerty, updatedGame[0].lettersUsed);
     const secondKeyboard = isDordle
-      ? colorKeyboard(querty, updatedGame[1].lettersUsed)
+      ? colorKeyboard(qwerty, updatedGame[1].lettersUsed)
       : undefined;
-    dispatch(keyboard, secondKeyboard);
+    dispatch(setClearInput());
     return dispatch(PressEnter(updatedGame, history, keyboard, secondKeyboard));
   };
 }
 
-export function startGame(isDordle:boolean, index?:number, secondIndex?:number){
-  return (dispatch:Dispatch<GameAction>)=>{
-  dispatch(toggleDrawer(false))
-  isDordle? 
-  dispatch(StartNewDordle(index, secondIndex)):
-  dispatch(StartNewWordle(index))
-}
-
+export function startGame(
+  isWordle: boolean,
+  gameMode: mode = mode.normal,
+  index?: number,
+  secondIndex?: number
+) {
+  return (dispatch: Dispatch<GameAction>) => {
+    dispatch(toggleDrawer(false));
+    isWordle
+      ? dispatch(StartNewWordle(gameMode, index))
+      : dispatch(StartNewDordle(gameMode, index, secondIndex));
+  };
 }

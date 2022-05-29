@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,13 +11,14 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Provider } from 'react-redux';
 import { chooseGame } from './redux/actions/app.actions';
+import { startGame } from './redux/actions/game.actions';
 import { RootState } from './redux/combineReducer';
 import store from './redux/store';
 
 import Dordle from './screens/Dordle';
 import Wordle from './screens/Wordle';
 
-import { Game, gameEnum } from './utils/types';
+import { Game, gameEnum, mode } from './utils/types';
 
 const App = () => {
   const screenWidth = useWindowDimensions().width;
@@ -31,40 +32,18 @@ const App = () => {
 
   const dispatch = useDispatch();
   const { gameType } = useSelector((state: RootState) => state.app);
-
-  const [gamesPlayed, setGamesPlayed] = useState<Game[]>([]);
-
-  const [play, setPlay] = useState<string>('');
-  const keepPlayingHandler = (value: string) => {
-    setPlay(value);
-  };
-  const addToHistoryHandler = (playedGame: Game) => {
-    if (
-      gamesPlayed.find((game: Game): boolean => game.id === playedGame.id) ===
-      undefined
-    ) {
-      setGamesPlayed([...gamesPlayed, playedGame]);
-    }
-  };
   // console.log('app.js');
+
+  useEffect(() => {
+    const isWordle = gameEnum.wordle === gameType;
+    dispatch(startGame(isWordle, mode.normal));
+  }, [gameType]);
 
   switch (gameType) {
     case gameEnum.wordle:
-      return (
-        <Wordle
-          keepPlaying={keepPlayingHandler}
-          gamesPlayed={gamesPlayed}
-          addToHistory={addToHistoryHandler}
-        />
-      );
+      return <Wordle />;
     case gameEnum.dordle:
-      return (
-        <Dordle
-          keepPlaying={keepPlayingHandler}
-          gamesPlayed={gamesPlayed}
-          addToHistory={addToHistoryHandler}
-        />
-      );
+      return <Dordle />;
     default:
       return (
         <View style={main}>

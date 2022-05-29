@@ -20,11 +20,9 @@ import rootReducer, { RootState } from '../redux/combineReducer';
 import { useDispatch } from 'react-redux';
 import {
   clearNumberInput,
-  deleteLetter,
   deleteNumber,
   insertNumber,
   setCursorToStart,
-  toggleDrawer,
 } from '../redux/actions/app.actions';
 import { startGame, StartNewDordle } from '../redux/actions/game.actions';
 
@@ -32,26 +30,18 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
   const screenWidth = useWindowDimensions().width;
   const keypad: ViewStyle = { flex: 8, width: screenWidth };
   const [isFirst, setIsFirst] = useState<boolean>(true);
-  // const currentIndex = numberEntered.findIndex((slot) => {
-  //   return slot.character.localeCompare(' ') === 0;
-  // });
-  // const [currentSlot, setCurrentSlot] = useState<number>(currentIndex);
 
   const {
     currentSlot,
     gameType,
-    drawerOpen,
     attempt,
     answerIndex,
     secondAnswerIndex,
   } = useSelector((state: RootState) => state.app);
-  const dispatch = useDispatch();
 
-  // const [numberEntered, setNumberEntered] = useState<Letter[]>(emptyNumber);
-  // const [secondNumberEntered, setSecondNumberEntered] =
-  //   useState<Letter[]>(emptyNumber);
-  console.log('answer index', answerIndex);
-  console.log('second answer index', secondAnswerIndex);
+  console.log('current slot in Answer Setter', currentSlot);
+  
+  const dispatch = useDispatch();
   const isWordle = gameType === gameEnum.wordle;
   const keyPressHandler = (letter: Letter) => {
     switch (letter.character) {
@@ -62,11 +52,8 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
       //return key
       case '\u23CE':
         dispatch(
-          startGame(parseNumber(answerIndex), parseNumber(secondAnswerIndex))
+          startGame(isWordle,parseNumber(answerIndex), parseNumber(secondAnswerIndex))
         );
-  
-        onClose();
-
         break;
 
       case 'Next':
@@ -84,24 +71,10 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
         dispatch(insertNumber(letter, currentSlot, attempt, isFirst));
     }
   };
-  // const deleteNumber = () => {};
 
-  // const insertLetter = (letter: Letter): void => {
-  //   if (currentSlot >= 4) {
-  //     return;
-  //   }
-  //   const letterWithIndex: Letter = { ...letter, index: currentSlot };
-  //   const updatedAttempt = isFirst
-  //     ? [...numberEntered]
-  //     : [...secondNumberEntered];
-  //   updatedAttempt[currentSlot] = letterWithIndex;
-  //   isFirst
-  //     ? setNumberEntered(updatedAttempt)
-  //     : setSecondNumberEntered(updatedAttempt);
-  //   setCurrentSlot(currentSlot + 1);
-  // };
   const [difficultyMode, setDifficultyMode] = useState<mode>(mode.normal);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  
   const setModeHandler = (value: boolean): void => {
     setIsEnabled(value);
     if (value) {

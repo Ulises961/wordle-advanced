@@ -1,18 +1,19 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import BackButton from '../elements/BackButton';
-import {commandDescriptions} from '../utils/lib';
+import { commandDescriptions } from '../utils/lib';
 
-const Help = ({onClose}: {onClose: () => void}): JSX.Element => {
+const Help = ({ onClose }: { onClose: () => void }): JSX.Element => {
   return (
     <View style={styles.main}>
       <BackButton pressHandler={onClose} />
       <View style={styles.commands}>
-        {commandDescriptions.map(command => {
+        {commandDescriptions.map((command) => {
           return (
             <View
               key={command.command + command.desc}
-              style={styles.singularCommand}>
+              style={styles.singularCommand}
+            >
               <Text style={styles.bold}>{command.command}</Text>
               <Text style={styles.regularText}>{command.desc}</Text>
             </View>
@@ -29,6 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: 'center',
     justifyContent: 'center',
+    padding: 10,
   },
 
   bold: {

@@ -63,3 +63,4 @@ export const SET_NUMBER = 'SET_NUMBER';
 export const SET_SECOND_NUMBER = 'SET_SECOND_NUMBER';
 export const UPDATE_KEYBOARD = 'UPDATE_KEYBOARD';
 export const CURSOR_TO_START = 'CURSOR_TO_START';
+export const CLEAR_INPUT = 'CLEAR_INPUT';

@@ -1,24 +1,14 @@
-import {StyleSheet, Text, View} from 'react-native';
-import {sortByIndex, toString} from '../utils/lib';
+import { StyleSheet, Text, View } from 'react-native';
+import { sortByIndex, toString } from '../utils/lib';
 import React from 'react';
-import {Game} from '../utils/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/combineReducer';
 
-export const GameResultMsg = ({
-  gameResults,
-}: {
-  gameResults: Game[];
-}): JSX.Element => {
-  const styles = StyleSheet.create({
-    backButtonText: {
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: 15,
-      paddingLeft: 10,
-      textAlign: 'center',
-    },
-  });
-  if (gameResults.length > 1) {
-    if (gameResults[0].guessed && gameResults[1].guessed) {
+export const GameResultMsg = (): JSX.Element => {
+  const { currentGame } = useSelector((state: RootState) => state.game);
+
+  if (currentGame.length > 1) {
+    if (currentGame[0].guessed && currentGame[1].guessed) {
       return (
         <View>
           <Text style={styles.backButtonText}>
@@ -27,8 +17,8 @@ export const GameResultMsg = ({
         </View>
       );
     } else if (
-      (gameResults[0].guessed && !gameResults[1].guessed) ||
-      (!gameResults[0].guessed && gameResults[1].guessed)
+      (currentGame[0].guessed && !currentGame[1].guessed) ||
+      (!currentGame[0].guessed && currentGame[1].guessed)
     ) {
       return (
         <View>
@@ -44,14 +34,14 @@ export const GameResultMsg = ({
           <Text style={styles.backButtonText}>You have lost!</Text>
           <Text style={styles.backButtonText}>
             The answer to the first one was{' '}
-            {toString(sortByIndex(gameResults[0].answer))}
-            and to the second {toString(sortByIndex(gameResults[0].answer))}
+            {toString(sortByIndex(currentGame[0].answer))}
+            and to the second {toString(sortByIndex(currentGame[0].answer))}
           </Text>
         </View>
       );
     }
   } else {
-    if (gameResults[0].guessed) {
+    if (currentGame[0].guessed) {
       return (
         <View>
           <Text style={styles.backButtonText}>You have won!</Text>
@@ -62,10 +52,19 @@ export const GameResultMsg = ({
         <View>
           <Text style={styles.backButtonText}>You have lost!</Text>
           <Text style={styles.backButtonText}>
-            The answer was {toString(sortByIndex(gameResults[0].answer))}
+            The answer was {toString(sortByIndex(currentGame[0].answer))}
           </Text>
         </View>
       );
     }
   }
 };
+const styles = StyleSheet.create({
+  backButtonText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 15,
+    paddingLeft: 10,
+    textAlign: 'center',
+  },
+});

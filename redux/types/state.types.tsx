@@ -1,8 +1,8 @@
 import { Game, gameEnum, Letter } from '../../utils/types';
 
 export interface GameState {
-  currentGame: Game[] | [undefined];
-  gameHistory: (Game | undefined)[];
+  currentGame: Game[];
+  gameHistory: Game[];
 }
 
 export interface AppState {

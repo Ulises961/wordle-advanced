@@ -17,15 +17,7 @@ import AnswerSetter from './AnswerSetter';
 import Help from './Help';
 import Stats from './Stats';
 
-const Settings = ({
-  startNewGame,
-  gamesPlayed,
-  isWordle,
-}: {
-  startNewGame: (gameMode: mode, index?: number) => void;
-  gamesPlayed: Game[];
-  isWordle: boolean;
-}) => {
+const Settings = () => {
   const screenWidth = useWindowDimensions().width;
   const [showSetting, setShowSetting] = useState<string>('');
   const chooseSettingHandler = (value: string) => {
@@ -38,26 +30,17 @@ const Settings = ({
 
   const dispatch = useDispatch();
   const { drawerOpen, gameType } = useSelector((state: RootState) => state.app);
-  console.log('drawer is open', drawerOpen);
-  
+
+  const isWordle = gameType === gameEnum.wordle;
   // console.log('Settings component');
 
   switch (showSetting) {
     case 'stats':
-      return (
-        <Stats
-          onClose={() => chooseSettingHandler('')}
-          gamesPlayed={gamesPlayed}
-        />
-      );
+      return <Stats onClose={() => chooseSettingHandler('')} />;
     case 'help':
       return <Help onClose={() => chooseSettingHandler('')} />;
     case 'setAnswer':
-      return (
-        <AnswerSetter
-          onClose={() => chooseSettingHandler('')}
-        />
-      );
+      return <AnswerSetter onClose={() => chooseSettingHandler('')} />;
     default:
       return (
         <View style={screen}>
@@ -78,7 +61,7 @@ const Settings = ({
                 content={'Choose Answer'}
                 contentStyle={styles.buttonText}
               />
-              {gameType === gameEnum.wordle && (
+              {isWordle && (
                 <View>
                   <Button
                     style={styles.button}

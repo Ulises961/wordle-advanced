@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,64 +9,40 @@ import {
   ViewStyle,
 } from 'react-native';
 import GameScreen from './GameScreen';
-import {newGame} from '../utils/lib';
+import { newGame } from '../utils/lib';
 import Settings from '../components/Settings';
-import {Game, mode} from '../utils/types';
+import { Game, gameEnum, mode } from '../utils/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
 import { useDispatch } from 'react-redux';
 import { toggleDrawer } from '../redux/actions/app.actions';
+import { startGame } from '../redux/actions/game.actions';
 
-const Dordle = ({
-  keepPlaying,
-  gamesPlayed,
-  addToHistory,
-}: {
-  keepPlaying: (value: string) => void;
-  gamesPlayed: Game[];
-  addToHistory: (currentGame: Game) => void;
-}) => {
+const Dordle = () => {
   const screenWidth = useWindowDimensions().width;
   const screenHeight = useWindowDimensions().height;
-  const mainFlex: ViewStyle = {flex: screenWidth > screenHeight ? 6 : 11};
-  const game = newGame(mode.normal);
-  const game2 = newGame(mode.normal);
-  const [currentGames, setCurrentGames] = useState<Game[]>([game, game2]);
-
-  const setNewGames = (gameMode: mode, index1?: number, index2?: number) => {
-    const createdGame1 = newGame(gameMode, index1);
-    const createdGame2 = newGame(gameMode, index2);
-    setCurrentGames([createdGame1, createdGame2]);
-  };
-
-
-  const {drawerOpen} = useSelector((state:RootState)=> state.app)
+  const mainFlex: ViewStyle = { flex: screenWidth > screenHeight ? 6 : 11 };
+  const { drawerOpen, gameType } = useSelector((state: RootState) => state.app);
   const dispatch = useDispatch();
   // console.log('Dordle component');
+  const isWordle = gameType === gameEnum.wordle;
+  useEffect(() => {
+    dispatch(startGame(isWordle, mode.normal));
+  }, []);
 
   return drawerOpen ? (
     <View style={styles.container}>
-      <Settings
-        startNewGame={setNewGames}
-        gamesPlayed={gamesPlayed}
-        isWordle={false}
-      />
+      <Settings />
     </View>
   ) : (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() =>dispatch(toggleDrawer(!drawerOpen))}>
+        <TouchableOpacity onPress={() => dispatch(toggleDrawer(!drawerOpen))}>
           <Text style={styles.hamburger}>≡</Text>
         </TouchableOpacity>
       </View>
       <View style={[styles.main, mainFlex]}>
-        <GameScreen
-          passedGames={currentGames}
-          setGames={setCurrentGames}
-          quitGame={() => keepPlaying('No')}
-          startNewGames={setNewGames}
-          addToHistory={addToHistory}
-        />
+        <GameScreen />
       </View>
     </View>
   );

@@ -19,7 +19,6 @@ export const Key = ({
   onPress: (letter: Letter) => void;
   style?: StyleProp<ViewStyle>;
 }) => {
-  console.log(secondLetter?.color, secondLetter?.index);
 
   const box1: ViewStyle = {
     backgroundColor: letter.color,
@@ -29,9 +28,6 @@ export const Key = ({
     backgroundColor: secondLetter ? secondLetter.color : letter.color,
     flex: 1,
   };
-
-  console.log(box1.backgroundColor);
-
   return (
     <View style={keyStyle.box}>
       <TouchableOpacity

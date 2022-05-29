@@ -1,26 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import BackButton from '../elements/BackButton';
+import { RootState } from '../redux/combineReducer';
 import { gameWonIn, generateStats } from '../utils/lib';
-import { Game } from '../utils/types';
 
-const Stats = ({
-  onClose,
-  gamesPlayed,
-}: {
-  onClose: () => void;
-  gamesPlayed: Game[];
-}): JSX.Element => {
-  const stats = generateStats(gamesPlayed);
-
-  // console.log(stats.guessedIn1 / gamesPlayed.length);
+const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
+  const { gameHistory } = useSelector((state: RootState) => state.game);
+  const stats = generateStats(gameHistory);
 
   return (
     <View style={styles.main}>
       <BackButton pressHandler={onClose} />
       <View style={styles.stats}>
-        {/* <Text style={styles.title}>Statistics:</Text> */}
-        {gamesPlayed.length > 0 ? (
+  
+        {gameHistory.length > 0 ? (
           <View style={styles.values}>
             {Object.entries(stats).map(([key, value]) => {
               return (
@@ -30,7 +24,7 @@ const Stats = ({
                   content={
                     key.includes('Total')
                       ? value
-                      : `${gameWonIn(value, gamesPlayed.length)}%`
+                      : `${gameWonIn(value, gameHistory.length)}%`
                   }
                 />
               );
@@ -69,6 +63,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderStyle: 'dashed',
     padding: 10,
+    margin: 2,
   },
   value: {
     padding: 16,

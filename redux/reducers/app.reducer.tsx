@@ -1,4 +1,4 @@
-import { emptyNumber } from '../../utils/lib';
+import { emptyNumber, emptyWord, qwerty } from '../../utils/lib';
 import {
   CLOSE_DRAWER,
   INS_DEL,
@@ -7,6 +7,7 @@ import {
   SET_NUMBER,
   CURSOR_TO_START,
   SET_SECOND_NUMBER,
+  CLEAR_INPUT,
 } from '../../utils/types';
 import { GameAction } from '../types/action.types';
 import { AppState } from '../types/state.types';
@@ -14,7 +15,7 @@ import { AppState } from '../types/state.types';
 const initialAppState: AppState = {
   drawerOpen: false,
   currentSlot: 0,
-  keyboard: [],
+  keyboard: qwerty,
   secondKeyboard: undefined,
   attempt: [],
   gameType: gameEnum.quit,
@@ -31,7 +32,7 @@ export default function appReducer(
       return {
         ...state,
         currentSlot: action.payload.slot,
-        attempt: action.payload.attempt,
+        attempt: [...action.payload.attempt],
       };
 
     case CLOSE_DRAWER:
@@ -52,6 +53,7 @@ export default function appReducer(
         answerIndex: [...action.payload.currentNumber],
         currentSlot: action.payload.slot,
       };
+
     case SET_SECOND_NUMBER:
       return {
         ...state,
@@ -59,10 +61,16 @@ export default function appReducer(
         answerIndex: [...action.payload.currentNumber],
         currentSlot: action.payload.slot,
       };
+
     case CURSOR_TO_START:
       return {
         ...state,
         currentSlot: action.payload,
+      };
+    case CLEAR_INPUT:
+      return {
+        ...state,
+        attempt: [...emptyWord],
       };
     default:
       return { ...state };

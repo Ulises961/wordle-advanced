@@ -1,4 +1,5 @@
 import {
+  CLEAR_INPUT,
   CLOSE_DRAWER,
   CLOSE_VIEW,
   CURSOR_TO_START,
@@ -40,7 +41,7 @@ export interface PressEnterAction {
   type: typeof ENTER;
   payload: {
     games: Game[];
-    toHistory: Game[] | undefined;
+    toHistory: Game[];
     keyboard: Letter[];
     secondKeyboard: Letter[] | undefined;
   };
@@ -60,15 +61,19 @@ export interface GameType {
 }
 export interface SetNumber {
   type: typeof SET_NUMBER;
-  payload: {currentNumber: Letter[], slot: number};
+  payload: { currentNumber: Letter[]; slot: number };
 }
 export interface SetSecondNumber {
   type: typeof SET_SECOND_NUMBER;
-  payload: {currentNumber: Letter[], slot: number};
+  payload: { currentNumber: Letter[]; slot: number };
 }
 export interface SetCursorToStart {
   type: typeof CURSOR_TO_START;
   payload: number;
+}
+
+export interface ClearInput {
+  type: typeof CLEAR_INPUT;
 }
 
 export type GameAction =
@@ -82,4 +87,5 @@ export type GameAction =
   | SetNumber
   | SetSecondNumber
   | SetCursorToStart
+  | ClearInput
   | UpdateKeyboardAction;

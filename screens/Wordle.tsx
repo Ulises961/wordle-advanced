@@ -1,43 +1,23 @@
-import React, { useState } from 'react';
+import React, {  } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import GameScreen from './GameScreen';
-import { newGame } from '../utils/lib';
 import Settings from '../components/Settings';
-import { Game, mode } from '../utils/types';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
 import { toggleDrawer } from '../redux/actions/app.actions';
 
-const Wordle = ({
-  keepPlaying,
-  gamesPlayed,
-  addToHistory,
-}: {
-  keepPlaying: (value: string) => void;
-  gamesPlayed: Game[];
-  addToHistory: (game: Game) => void;
-}) => {
+const Wordle = () => {
   const dispatch = useDispatch();
   const { drawerOpen } = useSelector((state: RootState) => state.app);
 
-  const game = newGame(mode.normal);
-  const [currentGame, setCurrentGame] = useState<Game[]>([game]);
-
-  const setNewGame = (gameMode: mode, index?: number) => {
-    const createdGame = newGame(gameMode, index);
-    setCurrentGame([createdGame]);
-  };
+  
 
   // console.log('Wordle component');
 
   return drawerOpen ? (
     <View style={[styles.container, styles.navigationContainer]}>
-      <Settings
-        startNewGame={setNewGame}
-        gamesPlayed={gamesPlayed}
-        isWordle={true}
-      />
+      <Settings />
     </View>
   ) : (
     <View style={styles.container}>
@@ -47,13 +27,7 @@ const Wordle = ({
         </TouchableOpacity>
       </View>
       <View style={styles.main}>
-        <GameScreen
-          passedGames={currentGame}
-          setGames={setCurrentGame}
-          quitGame={() => keepPlaying('No')}
-          startNewGames={setNewGame}
-          addToHistory={addToHistory}
-        />
+        <GameScreen />
       </View>
     </View>
   );

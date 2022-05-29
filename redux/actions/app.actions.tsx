@@ -1,5 +1,5 @@
 import { Dispatch } from 'react';
-import { ActionCreator, AnyAction } from 'redux';
+import { ActionCreator } from 'redux';
 import { emptyNumber } from '../../utils/lib';
 import {
   UPDATE_KEYBOARD,
@@ -12,6 +12,7 @@ import {
   SET_NUMBER,
   CURSOR_TO_START,
   SET_SECOND_NUMBER,
+  CLEAR_INPUT,
 } from '../../utils/types';
 import { GameAction } from '../types/action.types';
 
@@ -77,6 +78,13 @@ const chooseGameType: ActionCreator<GameAction> = (gametype: gameEnum) => {
     payload: gametype,
   };
 };
+
+const clearInput: ActionCreator<GameAction> = () => {
+  return {
+    type: CLEAR_INPUT,
+  };
+};
+
 export function insertLetter(
   letter: Letter,
   currentSlot: number,
@@ -89,10 +97,11 @@ export function insertLetter(
     // const letterWithIndex: Letter = { ...letter, index: currentSlot }; // PERHAPS IS USEFUL FOR OTHER FUNCTIONS DOWN THE TREE
     const updatedAttempt = [...attempt];
     updatedAttempt[currentSlot] = letter;
-
-    return dispatch(insertDeleteLetter(currentSlot + 1, updatedAttempt));
+    const updatedSlot = currentSlot + 1;
+    return dispatch(insertDeleteLetter(updatedSlot, updatedAttempt));
   };
 }
+
 export function toggleDrawer(isOpen: boolean) {
   return (dispatch: Dispatch<GameAction>) => {
     return dispatch(openCloseDrawer(isOpen));
@@ -134,9 +143,10 @@ export function deleteNumber(
     if (currentSlot < 0) {
       return;
     }
+
     const updatedAttempt = [...attempt];
     let updatedSlot = currentSlot;
-    if (currentSlot >= 1) {
+    if (updatedSlot >= 1) {
       updatedSlot = updatedSlot - 1;
       updatedAttempt[updatedSlot] = {
         character: ' ',
@@ -150,10 +160,9 @@ export function deleteNumber(
         color: Reset,
       };
     }
-
     return isFirst
-      ? dispatch(setNumber(updatedAttempt))
-      : dispatch(setSecondNumber(updatedAttempt));
+      ? dispatch(setNumber(updatedAttempt, updatedSlot))
+      : dispatch(setSecondNumber(updatedAttempt, updatedSlot));
   };
 }
 export function insertNumber(
@@ -163,20 +172,23 @@ export function insertNumber(
   isFirst: boolean
 ) {
   return (dispatch: Dispatch<GameAction>) => {
-    if (currentSlot >= 5) {
+    if (currentSlot >= 4) {
       return;
     }
     // const letterWithIndex: Letter = { ...letter, index: currentSlot }; // PERHAPS IS USEFUL FOR OTHER FUNCTIONS DOWN THE TREE
     const updatedAttempt = [...attempt];
     updatedAttempt[currentSlot] = letter;
+    const updatedSlot = currentSlot + 1;
     return isFirst
-      ? dispatch(setNumber(updatedAttempt, currentSlot + 1))
-      : dispatch(setSecondNumber(updatedAttempt, currentSlot + 1));
+      ? dispatch(setNumber(updatedAttempt, updatedSlot))
+      : dispatch(setSecondNumber(updatedAttempt, updatedSlot));
   };
 }
 
 export function chooseGame(gameType: gameEnum) {
   return (dispatch: Dispatch<GameAction>) => {
+    dispatch(toggleDrawer(false));
+    dispatch(setClearInput());
     dispatch(chooseGameType(gameType));
   };
 }
@@ -190,5 +202,11 @@ export function clearNumberInput() {
 export function setCursorToStart() {
   return (dispatch: Dispatch<GameAction>) => {
     dispatch(cursorToStart());
+  };
+}
+
+export function setClearInput() {
+  return (dispatch: Dispatch<GameAction>) => {
+    dispatch(clearInput());
   };
 }

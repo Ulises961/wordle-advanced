@@ -24,7 +24,7 @@ export const generateCharArray = (word: string, color: string): Letter[] => {
   });
 };
 
-export const querty: Letter[] = generateCharArray(
+export const qwerty: Letter[] = generateCharArray(
   'QWERTYUIOPASDFGHJKLZXCVBNM',
   Reset
 );
@@ -113,14 +113,11 @@ export const markLetterAsTried = (
     );
     if (foundIndex === -1) {
       updatedLettersUsed = [...updatedLettersUsed, newlyColoredLetter];
-    }
-    else{
-      updatedLettersUsed.splice(foundIndex,1,newlyColoredLetter)
+    } else {
+      updatedLettersUsed.splice(foundIndex, 1, newlyColoredLetter);
     }
   });
 
-  console.log(updatedLettersUsed);
-  
   return updatedLettersUsed;
 };
 
@@ -143,9 +140,9 @@ export const sortByIndex = (word: Letter[]): Letter[] => {
 };
 /**
  *
- * @param letter each letter of the querty keyboard
+ * @param letter each letter of the qwerty keyboard
  * @param word the guess of the user that has already been colored against the answer of the current game
- * @returns the updated querty with the colors of the new guess added
+ * @returns the updated qwerty with the colors of the new guess added
  */
 export const copyColor = (letter: Letter, lettersUsed: Letter[]): Letter => {
   const [head, ...tail] = lettersUsed;
@@ -231,7 +228,7 @@ export const updateGame = (game: Game, parsedGuess: Letter[]): Game => {
       : colorLetterStrict(parsedGuess, game.answer);
   const reorderedWord = sortByIndex(colorMarkedWord);
   const updatedLettersUsed = markLetterAsTried(reorderedWord, game.lettersUsed);
- 
+
   const isGuessed = checkIfGuessed(reorderedWord);
 
   const updatedNumberOfAttempts = game.numberOfAttempts + 1;
@@ -530,6 +527,8 @@ export const newGame = (newGameMode: mode, index?: number): Game => {
  * @returns the updated current game
  */
 export const playGame = (guess: Letter[], currentGame: Game): Game => {
+  console.log('current game in lib', currentGame);
+
   const preColoredGuess = guess.map((letter) => {
     return { ...letter, color: BgRed };
   });
@@ -539,7 +538,7 @@ export const playGame = (guess: Letter[], currentGame: Game): Game => {
   return currentGame;
 };
 
-export const generateStats = (gamesPlayed: Game[]): Stats => {
+export const generateStats = (gamesPlayed?: Game[]): Stats => {
   const stats: Stats = {
     'Total Attempts': 0,
     'Total Won': 0,
@@ -552,36 +551,38 @@ export const generateStats = (gamesPlayed: Game[]): Stats => {
     'Guessed in 6': 0,
   };
 
-  return gamesPlayed.reduce((total: Stats, game: Game): Stats => {
-    if (game.guessed) {
-      total['Total Won'] = total['Total Won'] + 1;
-      switch (game.numberOfAttempts) {
-        case 1:
-          total['Guessed in 1'] = stats['Guessed in 1'] + 1;
-          break;
-        case 2:
-          total['Guessed in 2'] = stats['Guessed in 2'] + 1;
-          break;
-        case 3:
-          total['Guessed in 3'] = stats['Guessed in 3'] + 1;
-          break;
-        case 4:
-          total['Guessed in 4'] = stats['Guessed in 4'] + 1;
-          break;
-        case 5:
-          total['Guessed in 5'] = stats['Guessed in 5'] + 1;
-          break;
-        case 6:
-          total['Guessed in 6'] = stats['Guessed in 6'] + 1;
-          break;
-      }
-    } else {
-      total['Total Lost'] = total['Total Lost'] + 1;
-    }
-    const totalAttempts = total['Total Attempts'] + game.numberOfAttempts;
+  return gamesPlayed
+    ? gamesPlayed.reduce((total: Stats, game: Game): Stats => {
+        if (game.guessed) {
+          total['Total Won'] = total['Total Won'] + 1;
+          switch (game.numberOfAttempts) {
+            case 1:
+              total['Guessed in 1'] = stats['Guessed in 1'] + 1;
+              break;
+            case 2:
+              total['Guessed in 2'] = stats['Guessed in 2'] + 1;
+              break;
+            case 3:
+              total['Guessed in 3'] = stats['Guessed in 3'] + 1;
+              break;
+            case 4:
+              total['Guessed in 4'] = stats['Guessed in 4'] + 1;
+              break;
+            case 5:
+              total['Guessed in 5'] = stats['Guessed in 5'] + 1;
+              break;
+            case 6:
+              total['Guessed in 6'] = stats['Guessed in 6'] + 1;
+              break;
+          }
+        } else {
+          total['Total Lost'] = total['Total Lost'] + 1;
+        }
+        const totalAttempts = total['Total Attempts'] + game.numberOfAttempts;
 
-    return { ...total, 'Total Attempts': totalAttempts };
-  }, stats);
+        return { ...total, 'Total Attempts': totalAttempts };
+      }, stats)
+    : stats;
 };
 
 export const toString = (word: Letter[]): string => {
