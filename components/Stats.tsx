@@ -3,20 +3,25 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import BackButton from '../elements/BackButton';
 import { RootState } from '../redux/combineReducer';
-import { gameWonIn, generateStats } from '../utils/lib';
+import { gameToString, gameWonIn, generateStats } from '../utils/lib';
 
 const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
   const { gameHistory } = useSelector((state: RootState) => state.game);
+  gameHistory.map((game) => {
+    console.log(gameToString(game));
+  });
+
   const stats = generateStats(gameHistory);
 
   return (
     <View style={styles.main}>
       <BackButton pressHandler={onClose} />
       <View style={styles.stats}>
-  
         {gameHistory.length > 0 ? (
           <View style={styles.values}>
             {Object.entries(stats).map(([key, value]) => {
+              console.log(key, value);
+
               return (
                 <GameStat
                   key={key}
@@ -24,7 +29,7 @@ const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
                   content={
                     key.includes('Total')
                       ? value
-                      : `${gameWonIn(value, gameHistory.length)}%`
+                      : `${gameWonIn(value, stats['Total Won'])}%`
                   }
                 />
               );

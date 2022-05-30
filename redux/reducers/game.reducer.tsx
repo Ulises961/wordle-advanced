@@ -1,5 +1,10 @@
-import { newGame } from '../../utils/lib';
-import { ENTER, mode, START_NEW_DORDLE, START_NEW_WORDLE } from '../../utils/types';
+import { gameToString, newGame } from '../../utils/lib';
+import {
+  ENTER,
+  mode,
+  START_NEW_DORDLE,
+  START_NEW_WORDLE,
+} from '../../utils/types';
 import { GameAction } from '../types/action.types';
 import { GameState } from '../types/state.types';
 
@@ -14,24 +19,24 @@ export function gameReducer(
 ): GameState {
   switch (action.type) {
     case START_NEW_WORDLE:
+      console.log('game reducer new wordle', gameToString(action.payload));
+      
       return {
         currentGame: [action.payload],
         gameHistory: [...state.gameHistory, ...state.currentGame],
-
       };
     case START_NEW_DORDLE:
       return {
         currentGame: [...action.payload],
         gameHistory: [...state.gameHistory, ...state.currentGame],
-
       };
     case ENTER:
-      const toHistory = action.payload.toHistory
-
+ 
       return {
         ...state,
-        gameHistory: [...state.gameHistory, ...toHistory],
+        gameHistory: [...state.gameHistory, ...action.payload.toHistory],
         currentGame: [...action.payload.games],
+        
       };
     default:
       return { ...state };

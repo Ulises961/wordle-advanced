@@ -16,13 +16,11 @@ import {
 } from '../../utils/types';
 import { GameAction } from '../types/action.types';
 
-export const updateKeyboard: ActionCreator<GameAction> = ({
-  keyboard,
-  secondKeyboard,
-}: {
-  keyboard: Letter[];
-  secondKeyboard: Letter[] | undefined;
-}) => {
+export const updateKeyboard: ActionCreator<GameAction> = (
+  keyboard: Letter[],
+  secondKeyboard: Letter[] | undefined
+) => {
+
   return {
     type: UPDATE_KEYBOARD,
     payload: { keyboard: keyboard, secondKeyboard: secondKeyboard },
@@ -94,9 +92,9 @@ export function insertLetter(
     if (currentSlot >= 5) {
       return;
     }
-    // const letterWithIndex: Letter = { ...letter, index: currentSlot }; // PERHAPS IS USEFUL FOR OTHER FUNCTIONS DOWN THE TREE
+    const letterWithIndex: Letter = { ...letter, index: currentSlot }; // PERHAPS IS USEFUL FOR OTHER FUNCTIONS DOWN THE TREE
     const updatedAttempt = [...attempt];
-    updatedAttempt[currentSlot] = letter;
+    updatedAttempt[currentSlot] = letterWithIndex;
     const updatedSlot = currentSlot + 1;
     return dispatch(insertDeleteLetter(updatedSlot, updatedAttempt));
   };
@@ -187,15 +185,14 @@ export function insertNumber(
 
 export function chooseGame(gameType: gameEnum) {
   return (dispatch: Dispatch<GameAction>) => {
-    dispatch(toggleDrawer(false));
-    dispatch(setClearInput());
     dispatch(chooseGameType(gameType));
   };
 }
 
 export function clearNumberInput() {
   return (dispatch: Dispatch<GameAction>) => {
-    dispatch(setNumber(emptyNumber));
+    dispatch(setNumber(emptyNumber,0));
+   
   };
 }
 
@@ -208,5 +205,14 @@ export function setCursorToStart() {
 export function setClearInput() {
   return (dispatch: Dispatch<GameAction>) => {
     dispatch(clearInput());
+  };
+}
+
+export function setUpdateKeyboard(
+  keyboard: Letter[],
+  secondKeyboard: Letter[] | undefined
+) {
+  return (dispatch: Dispatch<GameAction>) => {
+    dispatch(updateKeyboard(keyboard, secondKeyboard));
   };
 }

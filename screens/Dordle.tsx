@@ -16,19 +16,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
 import { useDispatch } from 'react-redux';
 import { toggleDrawer } from '../redux/actions/app.actions';
-import { startGame } from '../redux/actions/game.actions';
 
 const Dordle = () => {
   const screenWidth = useWindowDimensions().width;
   const screenHeight = useWindowDimensions().height;
   const mainFlex: ViewStyle = { flex: screenWidth > screenHeight ? 6 : 11 };
-  const { drawerOpen, gameType } = useSelector((state: RootState) => state.app);
+  const { drawerOpen } = useSelector((state: RootState) => state.app);
   const dispatch = useDispatch();
   // console.log('Dordle component');
-  const isWordle = gameType === gameEnum.wordle;
-  useEffect(() => {
-    dispatch(startGame(isWordle, mode.normal));
-  }, []);
+
 
   return drawerOpen ? (
     <View style={styles.container}>

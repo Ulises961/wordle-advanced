@@ -6,6 +6,8 @@ import {
 import { BackSpaceKey, EmptyKey, ReturnKey } from '../utils/specialKeys';
 import { Letter, Reset } from '../utils/types';
 import KeyRows from '../elements/KeyRows';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/combineReducer';
 
 const styles = StyleSheet.create({
   stack: {
@@ -25,18 +27,19 @@ export const Keyboard = ({
   style: StyleProp<ViewStyle>;
 }) => {
   const [localKeyboard, localKeyboard2] = lettersUsed;
-
-  const first = localKeyboard.slice(0, 10);
-  const second = localKeyboard.slice(10, 19).concat(BackSpaceKey);
+  const {keyboard,secondKeyboard} = useSelector((state:RootState)=> state.app)
+  
+  const first = keyboard.slice(0, 10);
+  const second = keyboard.slice(10, 19).concat(BackSpaceKey);
   const third = [EmptyKey]
-    .concat(localKeyboard.slice(19, 26))
+    .concat(keyboard.slice(19, 26))
     .concat(ReturnKey);
 
   return (
     <View style={[styles.stack, style]}>
       <KeyRows
         rows={[first, second, third]}
-        localKeyboard2={localKeyboard2}
+        localKeyboard2={secondKeyboard}
         onKeyPress={onKeyPress}
       />
     </View>

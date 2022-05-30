@@ -33,11 +33,12 @@ const App = () => {
   const dispatch = useDispatch();
   const { gameType } = useSelector((state: RootState) => state.app);
   // console.log('app.js');
-
-  useEffect(() => {
-    const isWordle = gameEnum.wordle === gameType;
-    dispatch(startGame(isWordle, mode.normal));
-  }, [gameType]);
+  const isWordle = true;
+  // useEffect(() => {
+  //   console.log('App.js use effect');
+  //   const isWordle = gameEnum.wordle === gameType;
+  //   if (gameType !== gameEnum.quit) dispatch(startGame(isWordle, mode.normal));
+  // }, [gameType]);
 
   switch (gameType) {
     case gameEnum.wordle:
@@ -49,7 +50,12 @@ const App = () => {
         <View style={main}>
           <Text style={styles.h1}>Welcome to Wordle</Text>
           <TouchableOpacity
-            onPress={() => dispatch(chooseGame(gameEnum.wordle))}
+            onPress={() => {
+              console.log(gameEnum.wordle);
+
+              dispatch(startGame(isWordle, mode.normal));
+              dispatch(chooseGame(gameEnum.wordle));
+            }}
             style={styles.button}
           >
             <View>
@@ -57,7 +63,12 @@ const App = () => {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => dispatch(chooseGame(gameEnum.dordle))}
+            onPress={() => {
+              console.log(gameEnum.wordle);
+
+              dispatch(startGame(!isWordle, mode.normal));
+              dispatch(chooseGame(gameEnum.wordle));
+            }}
             style={styles.button}
           >
             <View>

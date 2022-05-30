@@ -8,6 +8,7 @@ import {
   CURSOR_TO_START,
   SET_SECOND_NUMBER,
   CLEAR_INPUT,
+  UPDATE_KEYBOARD,
 } from '../../utils/types';
 import { GameAction } from '../types/action.types';
 import { AppState } from '../types/state.types';
@@ -71,6 +72,16 @@ export default function appReducer(
       return {
         ...state,
         attempt: [...emptyWord],
+        currentSlot: 0,
+      };
+
+    case UPDATE_KEYBOARD:
+      return {
+        ...state,
+        keyboard: [...action.payload.keyboard],
+        secondKeyboard: action.payload.secondKeyboard,
+        attempt: emptyWord,
+        currentSlot: 0,
       };
     default:
       return { ...state };

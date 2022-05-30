@@ -7,9 +7,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
 
 const InputRow = ({ style }: { style?: StyleProp<ViewStyle> }) => {
-
   const { attempt } = useSelector((state: RootState) => state.app);
-  
+
   return (
     <Row key={uuid.v4().toString()} style={style}>
       {attempt.map((letter) => {

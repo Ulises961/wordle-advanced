@@ -24,25 +24,24 @@ import {
   insertNumber,
   setCursorToStart,
 } from '../redux/actions/app.actions';
-import { startGame, StartNewDordle } from '../redux/actions/game.actions';
+import { startGame } from '../redux/actions/game.actions';
 
 const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
   const screenWidth = useWindowDimensions().width;
   const keypad: ViewStyle = { flex: 8, width: screenWidth };
   const [isFirst, setIsFirst] = useState<boolean>(true);
 
-  const {
-    currentSlot,
-    gameType,
-    attempt,
-    answerIndex,
-    secondAnswerIndex,
-  } = useSelector((state: RootState) => state.app);
+  const { currentSlot, gameType, attempt, answerIndex, secondAnswerIndex } =
+    useSelector((state: RootState) => state.app);
 
   console.log('current slot in Answer Setter', currentSlot);
-  
+
   const dispatch = useDispatch();
   const isWordle = gameType === gameEnum.wordle;
+
+  const [difficultyMode, setDifficultyMode] = useState<mode>(mode.normal);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+
   const keyPressHandler = (letter: Letter) => {
     switch (letter.character) {
       //backspace
@@ -52,7 +51,12 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
       //return key
       case '\u23CE':
         dispatch(
-          startGame(isWordle,parseNumber(answerIndex), parseNumber(secondAnswerIndex))
+          startGame(
+            isWordle,
+            difficultyMode,
+            parseNumber(answerIndex),
+            parseNumber(secondAnswerIndex)
+          )
         );
         break;
 
@@ -72,9 +76,6 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
     }
   };
 
-  const [difficultyMode, setDifficultyMode] = useState<mode>(mode.normal);
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  
   const setModeHandler = (value: boolean): void => {
     setIsEnabled(value);
     if (value) {
@@ -99,7 +100,7 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
           />
         </View>
       )}
-      <InputRow currentAttempt={attempt} />
+      <InputRow />
       <View>
         {answers[parseNumber(attempt)] === undefined ? (
           <Text style={styles.bold}>

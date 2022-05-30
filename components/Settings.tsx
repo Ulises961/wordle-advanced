@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,7 +10,12 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import BackButton from '../elements/BackButton';
 import Button from '../elements/Button';
-import { chooseGame, toggleDrawer } from '../redux/actions/app.actions';
+import {
+  chooseGame,
+  clearNumberInput,
+  setClearInput,
+  toggleDrawer,
+} from '../redux/actions/app.actions';
 import { RootState } from '../redux/combineReducer';
 import { Game, gameEnum, mode } from '../utils/types';
 import AnswerSetter from './AnswerSetter';
@@ -33,6 +38,9 @@ const Settings = () => {
 
   const isWordle = gameType === gameEnum.wordle;
   // console.log('Settings component');
+  useEffect(()=>{
+    dispatch(clearNumberInput())
+  },[])
 
   switch (showSetting) {
     case 'stats':

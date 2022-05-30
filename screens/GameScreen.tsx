@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
 import uuid from 'react-native-uuid';
 import { useSelector } from 'react-redux';
@@ -7,9 +7,14 @@ import Gameboard from '../components/Board';
 import GameOverView from '../components/GameOver';
 import { Keyboard } from '../components/Keyboard';
 import InputRow from '../elements/InputRow';
-import { deleteLetter, insertLetter } from '../redux/actions/app.actions';
+import {
+  deleteLetter,
+  insertLetter,
+  setClearInput,
+} from '../redux/actions/app.actions';
 import { dispatchEnter } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
+import { gameToString } from '../utils/lib';
 import { Game, Letter, gameEnum } from '../utils/types';
 
 const GameScreen = () => {
@@ -22,11 +27,14 @@ const GameScreen = () => {
     useSelector((state: RootState) => state.app);
 
   const { currentGame } = useSelector((state: RootState) => state.game);
+  console.log(currentGame);
 
   const isDordle = gameType === gameEnum.dordle;
-
-  console.log('current slot', currentSlot);
-  console.log('attempt', attempt);
+  useEffect(() => {
+    return () => {
+      dispatch(setClearInput());
+    };
+  }, []);
 
   const keyPressHandler = (letter: Letter) => {
     switch (letter.character) {
@@ -50,7 +58,7 @@ const GameScreen = () => {
   };
   const gameOverFlex: ViewStyle = { flex: portrait ? 6 : 4 };
   const mainflex: ViewStyle = { flex: portrait ? 20 : 5 };
-  
+
   return (
     <View style={styles.screen}>
       <View style={[styles.main, mainflex]}>

@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import GameScreen from './GameScreen';
 import Settings from '../components/Settings';
@@ -6,14 +6,20 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
 import { toggleDrawer } from '../redux/actions/app.actions';
+import { mode } from '../utils/types';
+import { startGame } from '../redux/actions/game.actions';
 
 const Wordle = () => {
   const dispatch = useDispatch();
-  const { drawerOpen } = useSelector((state: RootState) => state.app);
+  const { drawerOpen,gameType } = useSelector((state: RootState) => state.app);
 
-  
+  // useEffect(() => {
+  //   console.log('Wordle.js use effect');
+  //     dispatch(startGame(gameType, mode.normal));
+    
+  // }, []);
 
-  // console.log('Wordle component');
+   console.log('Wordle component');
 
   return drawerOpen ? (
     <View style={[styles.container, styles.navigationContainer]}>

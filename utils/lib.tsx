@@ -67,11 +67,10 @@ const SameCharDiffIndex = (letter1: Letter, letter2: Letter): Boolean => {
   );
 };
 const sortAlphabetically = (word: Letter[]): Letter[] => {
-  return [
-    ...word.sort((letter1: Letter, letter2: Letter) => {
-      return letter1.character.localeCompare(letter2.character);
-    }),
-  ];
+  const wordToSort = [...word];
+  return wordToSort.sort((letter1: Letter, letter2: Letter) => {
+    return letter1.character.localeCompare(letter2.character);
+  });
 };
 
 export const missingLettersAlert = () =>
@@ -134,7 +133,10 @@ export const colorKeyboard = (
 };
 
 export const sortByIndex = (word: Letter[]): Letter[] => {
-  return word.sort((letter1: Letter, letter2: Letter) => {
+  const wordToSort = [...word];
+  return wordToSort.sort((letter1: Letter, letter2: Letter) => {
+   
+
     return letter1.index - letter2.index;
   });
 };
@@ -149,16 +151,10 @@ export const copyColor = (letter: Letter, lettersUsed: Letter[]): Letter => {
   if (lettersUsed.length === 0) {
     return letter;
   } else if (head.character.localeCompare(letter.character) === 0) {
-    console.log(
-      head.character,
-      'head.color',
-      head.color,
-      'letter.color',
-      letter.color
-    );
+   
 
     if (head.color === BgYellow && letter.color === BgGreen) {
-      console.log('returning letter', letter);
+    
       return letter;
     }
     if (
@@ -227,6 +223,7 @@ export const updateGame = (game: Game, parsedGuess: Letter[]): Game => {
         })
       : colorLetterStrict(parsedGuess, game.answer);
   const reorderedWord = sortByIndex(colorMarkedWord);
+
   const updatedLettersUsed = markLetterAsTried(reorderedWord, game.lettersUsed);
 
   const isGuessed = checkIfGuessed(reorderedWord);
@@ -373,8 +370,8 @@ const reduceWord = (
  */
 
 const colorLetterStrict = (guess: Letter[], answer: Letter[]): Letter[] => {
-  const sortedGuess = sortAlphabetically(guess);
-  const sortedAnswer = sortAlphabetically(answer);
+  const sortedGuess = [...sortAlphabetically(guess)];
+  const sortedAnswer = [...sortAlphabetically(answer)];
 
   const [sameLettersInGuess, controlString]: [Letter[], string] = reduceWord(
     sortedAnswer,
@@ -388,17 +385,15 @@ const colorLetterStrict = (guess: Letter[], answer: Letter[]): Letter[] => {
     sameLettersInGuess
   );
   const coloredWord: Letter[] = [];
+
   generateCharArray(controlString, Reset).map((letter) => {
-    const guessSubArray = filterLetterByChar(
-      letter,
-      sortedGuess,
-      compareEquality
-    );
-    const answerSubArray = filterLetterByChar(
-      letter,
-      sortedAnswer,
-      compareEquality
-    );
+    const guessSubArray = [
+      ...filterLetterByChar(letter, sortedGuess, compareEquality),
+    ];
+
+    const answerSubArray = [
+      ...filterLetterByChar(letter, sortedAnswer, compareEquality),
+    ];
     coloredWord.push(...colorDoubleLetters(guessSubArray, answerSubArray, []));
   });
 
@@ -527,8 +522,6 @@ export const newGame = (newGameMode: mode, index?: number): Game => {
  * @returns the updated current game
  */
 export const playGame = (guess: Letter[], currentGame: Game): Game => {
-  console.log('current game in lib', currentGame);
-
   const preColoredGuess = guess.map((letter) => {
     return { ...letter, color: BgRed };
   });

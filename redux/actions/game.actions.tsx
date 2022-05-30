@@ -16,15 +16,18 @@ import {
 import { ActionCreator } from 'redux';
 import { GameAction } from '../types/action.types';
 import { Dispatch } from 'react';
-import { setClearInput, toggleDrawer } from './app.actions';
+import {
+  setClearInput,
+  setCursorToStart,
+  setUpdateKeyboard,
+  toggleDrawer,
+} from './app.actions';
 
-export const StartNewWordle: ActionCreator<GameAction> = ({
-  mode,
-  index,
-}: {
-  mode: mode;
-  index?: number;
-}) => {
+export const StartNewWordle: ActionCreator<GameAction> = (
+  mode: mode,
+  index?: number
+) => {
+  console.log('start new wordle index', index);
   return {
     type: START_NEW_WORDLE,
     payload: newGame(mode, index),
@@ -48,17 +51,13 @@ export const StartNewDordle: ActionCreator<GameAction> = ({
 
 export const PressEnter: ActionCreator<GameAction> = (
   updatedGame: Game[],
-  keyboard: Letter[],
-  history: Game[],
-  secondKeyboard?: Letter[]
+  history: Game[]
 ) => {
   return {
     type: ENTER,
     payload: {
       games: updatedGame,
       toHistory: history,
-      keyboard: keyboard,
-      secondKeyboard: secondKeyboard,
     },
   };
 };
@@ -68,7 +67,6 @@ export function dispatchEnter(
   currentGame: Game[],
   isDordle: boolean
 ) {
-  console.log('Current game is undefined', currentGame === undefined);
 
   return (dispatch: Dispatch<GameAction>) => {
     const isInputOk = processInput(attempt);
@@ -92,24 +90,30 @@ export function dispatchEnter(
     }
 
     const keyboard = colorKeyboard(qwerty, updatedGame[0].lettersUsed);
+
     const secondKeyboard = isDordle
       ? colorKeyboard(qwerty, updatedGame[1].lettersUsed)
       : undefined;
-    dispatch(setClearInput());
-    return dispatch(PressEnter(updatedGame, history, keyboard, secondKeyboard));
+    // dispatch(setClearInput());
+    dispatch(setUpdateKeyboard(keyboard, secondKeyboard));
+    return dispatch(PressEnter(updatedGame, history));
   };
 }
 
 export function startGame(
   isWordle: boolean,
-  gameMode: mode = mode.normal,
+  gameMode: mode,
   index?: number,
   secondIndex?: number
 ) {
+  console.log('starting new game');
   return (dispatch: Dispatch<GameAction>) => {
+
+    
     dispatch(toggleDrawer(false));
+    dispatch(setUpdateKeyboard(qwerty, undefined));
     isWordle
       ? dispatch(StartNewWordle(gameMode, index))
-      : dispatch(StartNewDordle(gameMode, index, secondIndex));
+      : dispatch(StartNewDordle(mode.normal, index, secondIndex));
   };
 }
