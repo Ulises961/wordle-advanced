@@ -7,6 +7,7 @@ import {
   BgGreen,
   BgRed,
   BgYellow,
+  Definition,
   filterFunction,
   Game,
   Letter,
@@ -135,8 +136,6 @@ export const colorKeyboard = (
 export const sortByIndex = (word: Letter[]): Letter[] => {
   const wordToSort = [...word];
   return wordToSort.sort((letter1: Letter, letter2: Letter) => {
-   
-
     return letter1.index - letter2.index;
   });
 };
@@ -151,10 +150,7 @@ export const copyColor = (letter: Letter, lettersUsed: Letter[]): Letter => {
   if (lettersUsed.length === 0) {
     return letter;
   } else if (head.character.localeCompare(letter.character) === 0) {
-   
-
     if (head.color === BgYellow && letter.color === BgGreen) {
-    
       return letter;
     }
     if (
@@ -512,7 +508,25 @@ export const newGame = (newGameMode: mode, index?: number): Game => {
     attempts: [],
     mode: newGameMode,
     id: id,
+    hint: '',
+    partOfSpeech: '',
   };
+};
+
+export const retrieveWordHints = async (word: string) => {
+  const url = `https://wordsapiv1.p.rapidapi.com/words/${word}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com',
+      'X-RapidAPI-Key': '745aca47d5msh4c5315e5cc88834p151353jsn9afe9a658e08',
+    },
+  };
+
+  return fetch(url, options)
+    .then((res) => res.json())
+    .catch((e) => `No definition for this word: ${e.message}`);
 };
 
 /**
@@ -629,4 +643,23 @@ export const gameWonIn = (guessedIn: number, gamesPlayed: number) => {
   return isNaN(guessedIn / gamesPlayed)
     ? 0
     : ((guessedIn / gamesPlayed) * 100).toFixed(1);
+};
+
+export const retrieveDefinition = async (answer:Letter[]): Promise<Definition> => {
+  const word = toString(answer);
+  const url = `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com',
+      'X-RapidAPI-Key': '745aca47d5msh4c5315e5cc88834p151353jsn9afe9a658e08',
+    },
+  };
+
+  const definition = fetch(url, options)
+    .then((res) => {
+      return res.json();
+    })
+    .then((parsedRes): Definition => parsedRes.definitions[0]);
+  return definition;
 };

@@ -1,9 +1,18 @@
-import {ScrollView, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 import Row from '../elements/Row';
 import React from 'react';
-import {generateEmptyRows} from '../utils/lib';
+import { generateEmptyRows } from '../utils/lib';
 import uuid from 'react-native-uuid';
-import {Letter} from '../utils/types';
+import { Letter } from '../utils/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/combineReducer';
 
 const Gameboard = ({
   attempts,
@@ -14,18 +23,21 @@ const Gameboard = ({
 }) => {
   const emptyArray = new Array<Letter[]>(0);
   const emptyRows = generateEmptyRows(leftAttempts, 0, emptyArray);
-  const emptyBox: ViewStyle = {backgroundColor: '#D3D3D3'};
+  const emptyBox: ViewStyle = { backgroundColor: '#D3D3D3' };
 
   return (
     <ScrollView style={styles.stack} key={uuid.v4().toString()}>
-      {attempts.map(word => {
+    
+    
+      {attempts.map((word) => {
         return (
           <Row key={uuid.v4().toString()}>
-            {word.map(letter => {
+            {word.map((letter) => {
               return (
                 <View
                   key={letter.character + uuid.v4()}
-                  style={[styles.letterBox, {backgroundColor: letter.color}]}>
+                  style={[styles.letterBox, { backgroundColor: letter.color }]}
+                >
                   <Text>{letter.character}</Text>
                 </View>
               );
@@ -36,14 +48,15 @@ const Gameboard = ({
 
       {leftAttempts >= 0 ? (
         <View>
-          {emptyRows.map(blankWord => {
+          {emptyRows.map((blankWord) => {
             return (
               <Row key={uuid.v4().toString()}>
-                {blankWord.map(letter => {
+                {blankWord.map((letter) => {
                   return (
                     <View
                       key={letter.character + uuid.v4()}
-                      style={[styles.letterBox, emptyBox]}>
+                      style={[styles.letterBox, emptyBox]}
+                    >
                       <Text>{letter.character}</Text>
                     </View>
                   );

@@ -42,8 +42,6 @@ export interface PressEnterAction {
   payload: {
     games: Game[];
     toHistory: Game[];
-    keyboard: Letter[];
-    secondKeyboard: Letter[] | undefined;
   };
 }
 

@@ -4,8 +4,10 @@ import {
   playGame,
   processInput,
   qwerty,
+  retrieveDefinition,
 } from '../../utils/lib';
 import {
+  Definition,
   ENTER,
   Game,
   Letter,
@@ -22,30 +24,21 @@ import {
   setUpdateKeyboard,
   toggleDrawer,
 } from './app.actions';
+import { isRejectedWithValue } from '@reduxjs/toolkit';
 
-export const StartNewWordle: ActionCreator<GameAction> = (
-  mode: mode,
-  index?: number
-) => {
-  console.log('start new wordle index', index);
+const StartNewWordle: ActionCreator<GameAction> = (game: Game) => {
   return {
     type: START_NEW_WORDLE,
-    payload: newGame(mode, index),
+    payload: game,
   };
 };
 
-export const StartNewDordle: ActionCreator<GameAction> = ({
-  mode,
-  index,
-  secondIndex,
-}: {
-  mode: mode;
-  index?: number;
-  secondIndex?: number;
-}) => {
+export const StartNewDordle: ActionCreator<GameAction> = (games: Game[]) => {
+  console.log('starting new wordle in mode', mode);
+
   return {
     type: START_NEW_DORDLE,
-    payload: [newGame(mode, index), newGame(mode, secondIndex)],
+    payload: games,
   };
 };
 
@@ -67,7 +60,6 @@ export function dispatchEnter(
   currentGame: Game[],
   isDordle: boolean
 ) {
-
   return (dispatch: Dispatch<GameAction>) => {
     const isInputOk = processInput(attempt);
     let history: Game[] = [];
@@ -106,14 +98,46 @@ export function startGame(
   index?: number,
   secondIndex?: number
 ) {
-  console.log('starting new game');
   return (dispatch: Dispatch<GameAction>) => {
-
-    
     dispatch(toggleDrawer(false));
     dispatch(setUpdateKeyboard(qwerty, undefined));
-    isWordle
-      ? dispatch(StartNewWordle(gameMode, index))
-      : dispatch(StartNewDordle(mode.normal, index, secondIndex));
+
+    if (isWordle) {
+      createGames(gameMode, isWordle, index).then((game) =>
+        dispatch(StartNewWordle(game[0]))
+      );
+    }
+    createGames(gameMode, isWordle, index, secondIndex).then((game) =>
+      dispatch(StartNewDordle(game))
+    );
   };
 }
+
+const createGames = async (
+  gameMode: mode,
+  isWordle: boolean,
+  index?: number,
+  secondIndex?: number
+): Promise<Game[]> => {
+  const game = newGame(gameMode, index);
+  const completeGameOne = await retrieveDefinition(game.answer).then(
+    (definition) => complementGame(definition, game)
+  );
+  if (isWordle) {
+    return [completeGameOne];
+  } else {
+    const gameTwo = newGame(mode.normal, secondIndex);
+    const completeGameTwo = await retrieveDefinition(gameTwo.answer).then(
+      (definition) => complementGame(definition, gameTwo)
+    );
+    return [completeGameOne, completeGameTwo];
+  }
+};
+
+const complementGame = (definition: Definition, game: Game): Game => {
+  return {
+    ...game,
+    hint: definition.definition,
+    partOfSpeech: definition.partOfSpeech,
+  };
+};

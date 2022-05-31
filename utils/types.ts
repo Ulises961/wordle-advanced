@@ -21,6 +21,8 @@ export interface Game {
   attempts: Letter[][];
   mode: mode;
   id: string;
+  hint: string;
+  partOfSpeech: string;
 }
 export interface Stats {
   'Guessed in 1': number;
@@ -51,6 +53,18 @@ export enum gameEnum {
   'dordle',
   'quit',
 }
+
+export interface FullDefinition {
+  definition: string;
+  partOfSpeech: string;
+  synonym: string;
+}
+
+export interface PartialDefinition {
+  definition: string;
+  partOfSpeech: string;
+}
+
 export const UPDATE_GAME = 'UPDATE_GAME';
 export const START_NEW_WORDLE = 'START_NEW_WORDLE';
 export const START_NEW_DORDLE = 'START_NEW_DORDLE';

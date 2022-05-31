@@ -34,51 +34,52 @@ const App = () => {
   const { gameType } = useSelector((state: RootState) => state.app);
   // console.log('app.js');
   const isWordle = true;
-  // useEffect(() => {
-  //   console.log('App.js use effect');
-  //   const isWordle = gameEnum.wordle === gameType;
-  //   if (gameType !== gameEnum.quit) dispatch(startGame(isWordle, mode.normal));
-  // }, [gameType]);
+ useEffect(() => {
+  dispatch(startGame(isWordle, mode.normal));
+ 
+  
+ }, [])
+ 
+  // switch (gameType) {
+  // case gameEnum.wordle:
+  return <Wordle />;
+  // case gameEnum.dordle:
+  return <Dordle />;
+  // default:
+  //   return (
+  //     <View style={main}>
+  //       <Text style={styles.h1}>Welcome to Wordle</Text>
+  //       <TouchableOpacity
+  //         onPress={() => {
+  //           console.log(gameEnum.wordle);
 
-  switch (gameType) {
-    case gameEnum.wordle:
-      return <Wordle />;
-    case gameEnum.dordle:
-      return <Dordle />;
-    default:
-      return (
-        <View style={main}>
-          <Text style={styles.h1}>Welcome to Wordle</Text>
-          <TouchableOpacity
-            onPress={() => {
-              console.log(gameEnum.wordle);
+  //           dispatch(startGame(isWordle, mode.normal));
+  //           dispatch(chooseGame(gameEnum.wordle));
+  //         }}
+  //         style={styles.button}
+  //       >
+  //         <View>
+  //           <Text style={styles.text}>Play a Wordle</Text>
+  //         </View>
+  //       </TouchableOpacity>
+  //       <TouchableOpacity
+  //         onPress={() => {
+  //           console.log(gameEnum.dordle);
 
-              dispatch(startGame(isWordle, mode.normal));
-              dispatch(chooseGame(gameEnum.wordle));
-            }}
-            style={styles.button}
-          >
-            <View>
-              <Text style={styles.text}>Play a Wordle</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              console.log(gameEnum.wordle);
+  //           dispatch(startGame(!isWordle, mode.normal));
+  //           dispatch(chooseGame(gameEnum.dordle));
+  //         }}
+  //         style={styles.button}
+  //       >
+  //         <View>
+  //           <Text style={styles.text}>Play a Dordle</Text>
+  //         </View>
+  //       </TouchableOpacity>
+  //       <View style={styles.empty} />
 
-              dispatch(startGame(!isWordle, mode.normal));
-              dispatch(chooseGame(gameEnum.wordle));
-            }}
-            style={styles.button}
-          >
-            <View>
-              <Text style={styles.text}>Play a Dordle</Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.empty} />
-        </View>
-      );
-  }
+  //     </View>
+  //   );
+  // }
 };
 
 const styles = StyleSheet.create({

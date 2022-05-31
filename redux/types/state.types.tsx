@@ -14,4 +14,5 @@ export interface AppState {
   gameType: gameEnum;
   answerIndex: Letter[];
   secondAnswerIndex: Letter[];
+
 }

@@ -16,6 +16,7 @@ import {
   setClearInput,
   toggleDrawer,
 } from '../redux/actions/app.actions';
+import { startGame } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
 import { Game, gameEnum, mode } from '../utils/types';
 import AnswerSetter from './AnswerSetter';
@@ -38,9 +39,9 @@ const Settings = () => {
 
   const isWordle = gameType === gameEnum.wordle;
   // console.log('Settings component');
-  useEffect(()=>{
-    dispatch(clearNumberInput())
-  },[])
+  useEffect(() => {
+    dispatch(clearNumberInput());
+  }, []);
 
   switch (showSetting) {
     case 'stats':
@@ -74,8 +75,7 @@ const Settings = () => {
                   <Button
                     style={styles.button}
                     pressHandler={() => {
-                      startNewGame(mode.normal);
-                      dispatch(toggleDrawer(!drawerOpen));
+                      dispatch(startGame(isWordle, mode.normal));
                     }}
                     content={'Easy'}
                     contentStyle={styles.buttonText}
@@ -83,8 +83,7 @@ const Settings = () => {
                   <Button
                     style={styles.button}
                     pressHandler={() => {
-                      startNewGame(mode.hard);
-                      dispatch(toggleDrawer(!drawerOpen));
+                      dispatch(startGame(isWordle, mode.hard));
                     }}
                     content={'Hard'}
                     contentStyle={styles.buttonText}
