@@ -1,3 +1,4 @@
+import { is } from '@reduxjs/toolkit/node_modules/immer/dist/internal';
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -11,13 +12,15 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import Gameboard from '../components/Board';
 import GameOverView from '../components/GameOver';
+import Hints from '../components/Hints';
 import { Keyboard } from '../components/Keyboard';
 import Button from '../elements/Button';
 import InputRow from '../elements/InputRow';
 import {
+  clearInput,
   deleteLetter,
   insertLetter,
-  setClearInput,
+ 
 } from '../redux/actions/app.actions';
 import { dispatchEnter } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
@@ -38,7 +41,7 @@ const GameScreen = () => {
   const isDordle = gameType === gameEnum.dordle;
   useEffect(() => {
     return () => {
-      dispatch(setClearInput());
+      dispatch(clearInput());
     };
   }, []);
 
@@ -57,6 +60,12 @@ const GameScreen = () => {
         dispatch(insertLetter(letter, currentSlot, attempt));
     }
   };
+  const isGameOver =
+    (currentGame[0].guessed &&
+      (currentGame[1] === undefined ||
+        currentGame[1].guessed ||
+        currentGame[1].numberOfAttempts > 5)) ||
+    currentGame[0].numberOfAttempts > 5;
 
   const portrait = screenHeight > screenWidth;
   const portraitStyle: ViewStyle = {
@@ -64,29 +73,15 @@ const GameScreen = () => {
   };
   const gameOverFlex: ViewStyle = { flex: portrait ? 6 : 4 };
   const mainflex: ViewStyle = { flex: portrait ? 20 : 5 };
-  const [showHint, setShowHint] = useState<boolean>(false);
-  const [desperateHint, showDesperateHint] = useState<boolean>(false);
-  const switchHandler = () => {
-    setShowHint(!showHint);
-  };
+
   return currentGame.length === 0 ? null : (
     <View style={styles.screen}>
       <View style={[styles.main, mainflex]}>
         <View style={[styles.game, portraitStyle]}>
-          {currentGame.map((eachGame: Game) => {
+          {currentGame.map((eachGame: Game, index: number) => {
             return (
               <View style={[styles.game]} key={uuid.v4().toString()}>
-                <Button
-                  pressHandler={switchHandler}
-                  content={'Hint'}
-                  style={{ backgroundColor: '#2196F3' }}
-                  extraContent={
-                    showHint
-                      ? `The word to guess is a(n) ${eachGame.partOfSpeech}`
-                      : ''
-                  }
-                />
-
+                <Hints game={eachGame} index={index} />
                 <Gameboard
                   attempts={eachGame.attempts}
                   leftAttempts={6 - eachGame.attempts.length}
@@ -98,18 +93,13 @@ const GameScreen = () => {
       </View>
 
       <View style={[styles.gameOver, gameOverFlex]}>
-        {(currentGame[0].guessed &&
-          (currentGame[1] === undefined ||
-            currentGame[1].guessed ||
-            currentGame[1].numberOfAttempts > 5)) ||
-        currentGame[0].numberOfAttempts > 5 ? (
+        {isGameOver ? (
           <View style={[styles.gameOver, gameOverFlex]}>
             <GameOverView />
           </View>
         ) : (
           <View style={{ height: '100%' }}>
             <InputRow key={uuid.v4().toString()} style={styles.input} />
-
             <Keyboard
               onKeyPress={keyPressHandler}
               lettersUsed={[keyboard, secondKeyboard]}
@@ -150,11 +140,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
     backgroundColor: 'orange',
-  },
-  hint: {
-    alignSelf: 'flex-end',
-    marginRight: 30,
-    justifyContent: 'center',
   },
 });
 

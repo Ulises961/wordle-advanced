@@ -19,10 +19,12 @@ import { useSelector } from 'react-redux';
 import rootReducer, { RootState } from '../redux/combineReducer';
 import { useDispatch } from 'react-redux';
 import {
-  clearNumberInput,
+
+  cursorToStart,
   deleteNumber,
   insertNumber,
-  setCursorToStart,
+
+  setNumber,
 } from '../redux/actions/app.actions';
 import { startGame } from '../redux/actions/game.actions';
 
@@ -62,13 +64,13 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
 
       case 'Next':
         setIsFirst(false);
-        dispatch(setCursorToStart());
+        dispatch(cursorToStart());
         break;
 
       case 'Previous':
         setIsFirst(true);
-        dispatch(clearNumberInput());
-        dispatch(setCursorToStart());
+        dispatch(setNumber(emptyNumber,0));
+        
         break;
 
       default:

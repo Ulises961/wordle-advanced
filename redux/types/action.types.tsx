@@ -20,10 +20,7 @@ export interface CloseDrawerAction {
   type: typeof CLOSE_DRAWER;
   payload: { isOpen: boolean };
 }
-export interface CloseSettingAction {
-  type: typeof CLOSE_VIEW;
-  payload: { isOpen: boolean };
-}
+
 export interface StartNewDordleAction {
   type: typeof START_NEW_DORDLE;
   payload: Game[];
@@ -67,7 +64,6 @@ export interface SetSecondNumber {
 }
 export interface SetCursorToStart {
   type: typeof CURSOR_TO_START;
-  payload: number;
 }
 
 export interface ClearInput {
@@ -80,7 +76,7 @@ export type GameAction =
   | StartNewDordleAction
   | StartNewWordleAction
   | CloseDrawerAction
-  | CloseSettingAction
+
   | GameType
   | SetNumber
   | SetSecondNumber

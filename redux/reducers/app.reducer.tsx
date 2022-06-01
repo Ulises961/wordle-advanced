@@ -19,7 +19,7 @@ const initialAppState: AppState = {
   keyboard: qwerty,
   secondKeyboard: undefined,
   attempt: [],
-  gameType: gameEnum.quit,
+  gameType: gameEnum.wordle,
   answerIndex: emptyNumber,
   secondAnswerIndex: emptyNumber,
 };
@@ -40,6 +40,8 @@ export default function appReducer(
       return {
         ...state,
         drawerOpen: action.payload.isOpen,
+        attempt: emptyWord,
+        currentSlot:0,
       };
 
     case GAME_TYPE:
@@ -66,7 +68,7 @@ export default function appReducer(
     case CURSOR_TO_START:
       return {
         ...state,
-        currentSlot: action.payload,
+        currentSlot:0,
       };
     case CLEAR_INPUT:
       return {

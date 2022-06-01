@@ -1,6 +1,5 @@
 import { Dispatch } from 'react';
 import { ActionCreator } from 'redux';
-import { emptyNumber } from '../../utils/lib';
 import {
   UPDATE_KEYBOARD,
   Letter,
@@ -37,14 +36,14 @@ const insertDeleteLetter: ActionCreator<GameAction> = (
   };
 };
 
-const openCloseDrawer: ActionCreator<GameAction> = (isOpen: boolean) => {
+export const openCloseDrawer: ActionCreator<GameAction> = (isOpen: boolean) => {
   return {
     type: CLOSE_DRAWER,
     payload: { isOpen },
   };
 };
 
-const setNumber: ActionCreator<GameAction> = (
+export const setNumber: ActionCreator<GameAction> = (
   currentNumber: Letter[],
   currentSlot: number
 ) => {
@@ -63,21 +62,21 @@ const setSecondNumber: ActionCreator<GameAction> = (
   };
 };
 
-const cursorToStart: ActionCreator<GameAction> = () => {
+export const cursorToStart: ActionCreator<GameAction> = () => {
   return {
     type: CURSOR_TO_START,
-    payload: 0,
+
   };
 };
 
-const chooseGameType: ActionCreator<GameAction> = (gametype: gameEnum) => {
+export const chooseGameType: ActionCreator<GameAction> = (gametype: gameEnum) => {
   return {
     type: GAME_TYPE,
     payload: gametype,
   };
 };
 
-const clearInput: ActionCreator<GameAction> = () => {
+export const clearInput: ActionCreator<GameAction> = () => {
   return {
     type: CLEAR_INPUT,
   };
@@ -92,7 +91,7 @@ export function insertLetter(
     if (currentSlot >= 5) {
       return;
     }
-    const letterWithIndex: Letter = { ...letter, index: currentSlot }; // PERHAPS IS USEFUL FOR OTHER FUNCTIONS DOWN THE TREE
+    const letterWithIndex: Letter = { ...letter, index: currentSlot };
     const updatedAttempt = [...attempt];
     updatedAttempt[currentSlot] = letterWithIndex;
     const updatedSlot = currentSlot + 1;
@@ -100,11 +99,7 @@ export function insertLetter(
   };
 }
 
-export function toggleDrawer(isOpen: boolean) {
-  return (dispatch: Dispatch<GameAction>) => {
-    return dispatch(openCloseDrawer(isOpen));
-  };
-}
+
 
 export function deleteLetter(currentSlot: number, attempt: Letter[]) {
   return (dispatch: Dispatch<GameAction>) => {
@@ -183,36 +178,3 @@ export function insertNumber(
   };
 }
 
-export function chooseGame(gameType: gameEnum) {
-  return (dispatch: Dispatch<GameAction>) => {
-    dispatch(chooseGameType(gameType));
-  };
-}
-
-export function clearNumberInput() {
-  return (dispatch: Dispatch<GameAction>) => {
-    dispatch(setNumber(emptyNumber,0));
-   
-  };
-}
-
-export function setCursorToStart() {
-  return (dispatch: Dispatch<GameAction>) => {
-    dispatch(cursorToStart());
-  };
-}
-
-export function setClearInput() {
-  return (dispatch: Dispatch<GameAction>) => {
-    dispatch(clearInput());
-  };
-}
-
-export function setUpdateKeyboard(
-  keyboard: Letter[],
-  secondKeyboard: Letter[] | undefined
-) {
-  return (dispatch: Dispatch<GameAction>) => {
-    dispatch(updateKeyboard(keyboard, secondKeyboard));
-  };
-}

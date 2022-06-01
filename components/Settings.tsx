@@ -11,13 +11,13 @@ import { useDispatch } from 'react-redux';
 import BackButton from '../elements/BackButton';
 import Button from '../elements/Button';
 import {
-  chooseGame,
-  clearNumberInput,
-  setClearInput,
-  toggleDrawer,
+  chooseGameType,
+  openCloseDrawer,
+  setNumber,
 } from '../redux/actions/app.actions';
 import { startGame } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
+import { emptyNumber } from '../utils/lib';
 import { Game, gameEnum, mode } from '../utils/types';
 import AnswerSetter from './AnswerSetter';
 import Help from './Help';
@@ -40,7 +40,7 @@ const Settings = () => {
   const isWordle = gameType === gameEnum.wordle;
   // console.log('Settings component');
   useEffect(() => {
-    dispatch(clearNumberInput());
+    dispatch(setNumber(emptyNumber,0));
   }, []);
 
   switch (showSetting) {
@@ -54,7 +54,7 @@ const Settings = () => {
       return (
         <View style={screen}>
           <BackButton
-            pressHandler={() => dispatch(toggleDrawer(!drawerOpen))}
+            pressHandler={() => dispatch(openCloseDrawer(!drawerOpen))}
           />
           <View style={styles.main}>
             <ScrollView contentContainerStyle={styles.scrollviewStyle}>
@@ -98,7 +98,7 @@ const Settings = () => {
               />
               <Button
                 style={styles.button}
-                pressHandler={() => dispatch(chooseGame(gameEnum.quit))}
+                pressHandler={() => dispatch(chooseGameType(gameEnum.quit))}
                 content={'Quit'}
                 contentStyle={styles.buttonText}
               />

@@ -1,70 +1,52 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { sortByIndex, toString } from '../utils/lib';
+import { toString } from '../utils/lib';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
+import MessageField from './MessageField';
 
 export const GameResultMsg = (): JSX.Element => {
   const { currentGame } = useSelector((state: RootState) => state.game);
+  const guessedBoth = currentGame[0].guessed && currentGame[1]?.guessed;
 
+  const guessedOnlyOne =
+    (currentGame[0].guessed && !currentGame[1]?.guessed) ||
+    (!currentGame[0].guessed && currentGame[1]?.guessed);
+
+  const firstAnswer = toString(currentGame[0].answer);
+  const secondAnswer = toString(currentGame[0]?.answer);
+  const firstAnswerMeaning = currentGame[0].hint;
+  const secondAnswerMeaning = currentGame[1]?.hint;
   if (currentGame.length > 1) {
-    if (currentGame[0].guessed && currentGame[1].guessed) {
+    if (guessedBoth) {
+      return <MessageField heading=" You have won the dordle challenge!" />;
+    } else if (guessedOnlyOne) {
       return (
-        <View>
-          <Text style={styles.backButtonText}>
-            You have won the dordle challenge!
-          </Text>
-        </View>
-      );
-    } else if (
-      (currentGame[0].guessed && !currentGame[1].guessed) ||
-      (!currentGame[0].guessed && currentGame[1].guessed)
-    ) {
-      return (
-        <View>
-          <Text style={styles.backButtonText}>Not so bad!</Text>
-          <Text style={styles.backButtonText}>
-            One out of two is still a success!
-          </Text>
-        </View>
+        <MessageField
+          heading="Not so bad!"
+          content=" One out of two is still a success!"
+        />
       );
     } else {
       return (
-        <View>
-          <Text style={styles.backButtonText}>You have lost!</Text>
-          <Text style={styles.backButtonText}>
-            The answer to the first one was{' '}
-            {toString(sortByIndex(currentGame[0].answer))}
-            and to the second {toString(sortByIndex(currentGame[0].answer))}
-          </Text>
-        </View>
+        <MessageField
+          heading="You have lost!"
+          content={`The answer to the first one was ${firstAnswer}
+       . Its meaning: ${firstAnswerMeaning}
+        and to the second ${secondAnswer}. Its meaning: ${secondAnswerMeaning}`}
+        />
       );
     }
   } else {
     if (currentGame[0].guessed) {
-      return (
-        <View>
-          <Text style={styles.backButtonText}>You have won!</Text>
-        </View>
-      );
+      return <MessageField heading="You have won!" />;
     } else {
       return (
-        <View>
-          <Text style={styles.backButtonText}>You have lost!</Text>
-          <Text style={styles.backButtonText}>
-            The answer was {toString(sortByIndex(currentGame[0].answer))}
-          </Text>
-        </View>
+        <MessageField
+          heading="You have lost!"
+          content={`The answer was ${firstAnswer}
+          )}. Its meaning: ${firstAnswerMeaning}`}
+        />
       );
     }
   }
 };
-const styles = StyleSheet.create({
-  backButtonText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 15,
-    paddingLeft: 10,
-    textAlign: 'center',
-  },
-});

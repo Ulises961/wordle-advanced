@@ -5,19 +5,15 @@ import Settings from '../components/Settings';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
-import { toggleDrawer } from '../redux/actions/app.actions';
+
 import { mode } from '../utils/types';
 import { startGame } from '../redux/actions/game.actions';
+import { openCloseDrawer } from '../redux/actions/app.actions';
 
 const Wordle = () => {
   const dispatch = useDispatch();
-  const { drawerOpen,gameType } = useSelector((state: RootState) => state.app);
+  const { drawerOpen } = useSelector((state: RootState) => state.app);
 
-  // useEffect(() => {
-  //   console.log('Wordle.js use effect');
-  //     dispatch(startGame(gameType, mode.normal));
-    
-  // }, []);
 
    console.log('Wordle component');
 
@@ -28,7 +24,7 @@ const Wordle = () => {
   ) : (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => dispatch(toggleDrawer(true))}>
+        <TouchableOpacity onPress={() => dispatch(openCloseDrawer(true))}>
           <Text style={styles.hamburger}>≡</Text>
         </TouchableOpacity>
       </View>

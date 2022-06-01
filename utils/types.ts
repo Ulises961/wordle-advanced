@@ -23,6 +23,7 @@ export interface Game {
   id: string;
   hint: string;
   partOfSpeech: string;
+  extraInfo:string
 }
 export interface Stats {
   'Guessed in 1': number;
@@ -57,7 +58,7 @@ export enum gameEnum {
 export interface FullDefinition {
   definition: string;
   partOfSpeech: string;
-  synonym: string;
+  extraInfo: string;
 }
 
 export interface PartialDefinition {

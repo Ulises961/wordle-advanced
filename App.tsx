@@ -1,3 +1,4 @@
+import { Dispatch } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -10,10 +11,11 @@ import {
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Provider } from 'react-redux';
-import { chooseGame } from './redux/actions/app.actions';
+import { chooseGame, chooseGameType } from './redux/actions/app.actions';
 import { startGame } from './redux/actions/game.actions';
 import { RootState } from './redux/combineReducer';
 import store from './redux/store';
+import { GameAction } from './redux/types/action.types';
 
 import Dordle from './screens/Dordle';
 import Wordle from './screens/Wordle';
@@ -30,21 +32,16 @@ const App = () => {
     justifyContent: 'space-around',
   };
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<Dispatch<GameAction>>();
   const { gameType } = useSelector((state: RootState) => state.app);
   // console.log('app.js');
   const isWordle = true;
- useEffect(() => {
-  dispatch(startGame(isWordle, mode.normal));
- 
-  
- }, [])
- 
+
   // switch (gameType) {
   // case gameEnum.wordle:
   return <Wordle />;
   // case gameEnum.dordle:
-  return <Dordle />;
+  // return <Dordle />;
   // default:
   //   return (
   //     <View style={main}>
@@ -54,7 +51,7 @@ const App = () => {
   //           console.log(gameEnum.wordle);
 
   //           dispatch(startGame(isWordle, mode.normal));
-  //           dispatch(chooseGame(gameEnum.wordle));
+  //           dispatch(chooseGameType(gameEnum.wordle));
   //         }}
   //         style={styles.button}
   //       >
@@ -67,7 +64,7 @@ const App = () => {
   //           console.log(gameEnum.dordle);
 
   //           dispatch(startGame(!isWordle, mode.normal));
-  //           dispatch(chooseGame(gameEnum.dordle));
+  //           dispatch(chooseGameType(gameEnum.dordle));
   //         }}
   //         style={styles.button}
   //       >

@@ -9,9 +9,11 @@ import {
   BgYellow,
   Definition,
   filterFunction,
+  FullDefinition,
   Game,
   Letter,
   mode,
+  PartialDefinition,
   predicateFunction,
   Reset,
   Stats,
@@ -510,6 +512,7 @@ export const newGame = (newGameMode: mode, index?: number): Game => {
     id: id,
     hint: '',
     partOfSpeech: '',
+    extraInfo: '',
   };
 };
 
@@ -593,6 +596,7 @@ export const generateStats = (gamesPlayed?: Game[]): Stats => {
 };
 
 export const toString = (word: Letter[]): string => {
+  word = [...sortByIndex(word)];
   let st = '';
   word.map((letter) => {
     st = st.concat(letter.character);
@@ -601,12 +605,12 @@ export const toString = (word: Letter[]): string => {
 };
 export const gameToString = (game: Game): string => {
   let attemptsString = '';
-  return `Answer: ${toString(sortByIndex(game.answer))},
-  Letters used: ${toString(sortByIndex(game.lettersUsed))},
+  return `Answer: ${toString(game.answer)},
+  Letters used: ${toString(game.lettersUsed)},
   Atempts tried: ${game.attempts.map(
     (attempt) =>
       (attemptsString = attemptsString
-        .concat(toString(sortByIndex(attempt)))
+        .concat(toString(attempt))
         .concat(',\n'))
   )},
   Guessed ${game.guessed ? 'Yes' : 'No'},
@@ -645,9 +649,13 @@ export const gameWonIn = (guessedIn: number, gamesPlayed: number) => {
     : ((guessedIn / gamesPlayed) * 100).toFixed(1);
 };
 
-export const retrieveDefinition = async (answer:Letter[]): Promise<Definition> => {
+export const retrieveDefinition = async (
+  answer: Letter[]
+): Promise<FullDefinition> => {
   const word = toString(answer);
-  const url = `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`;
+  const definition_endpoint = `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`;
+  const synonym_endpoint = `https://wordsapiv1.p.rapidapi.com/words/${word}/synonym`;
+  const similarTo_endpoint = `https://wordsapiv1.p.rapidapi.com/words/${word}/similarTo`;
   const options = {
     method: 'GET',
     headers: {
@@ -656,10 +664,41 @@ export const retrieveDefinition = async (answer:Letter[]): Promise<Definition> =
     },
   };
 
-  const definition = fetch(url, options)
-    .then((res) => {
-      return res.json();
-    })
-    .then((parsedRes): Definition => parsedRes.definitions[0]);
-  return definition;
+  const definition: PartialDefinition[] = await fetch(
+    definition_endpoint,
+    options
+  )
+    .then((res) => res.json())
+    .then((parsedRes): PartialDefinition[] => parsedRes.definitions);
+
+  console.log('definition', definition);
+
+  let res = await fetch(synonym_endpoint, options);
+  let parsedRes = await res.json();
+  const synonym = (await parsedRes.synonym[0])
+    ? parsedRes.synonym[0]
+    : undefined;
+
+  console.log('synonym', synonym);
+
+  res = await fetch(similarTo_endpoint, options);
+  parsedRes = await res.json();
+  const similarTo = (await parsedRes.similarTo[0])
+    ? parsedRes.similarTo[0]
+    : undefined;
+
+  console.log('similarTo', similarTo);
+
+  let extraInfo =
+    synonym ||
+    similarTo ||
+    definition[1]?.definition ||
+    "Sorry we couldn't get any more help!";
+
+
+  return {
+    definition: definition[0].definition,
+    partOfSpeech: definition[0].partOfSpeech,
+    extraInfo: extraInfo,
+  };
 };

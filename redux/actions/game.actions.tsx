@@ -7,8 +7,8 @@ import {
   retrieveDefinition,
 } from '../../utils/lib';
 import {
-  Definition,
   ENTER,
+  FullDefinition,
   Game,
   Letter,
   mode,
@@ -18,13 +18,7 @@ import {
 import { ActionCreator } from 'redux';
 import { GameAction } from '../types/action.types';
 import { Dispatch } from 'react';
-import {
-  setClearInput,
-  setCursorToStart,
-  setUpdateKeyboard,
-  toggleDrawer,
-} from './app.actions';
-import { isRejectedWithValue } from '@reduxjs/toolkit';
+import { updateKeyboard } from './app.actions';
 
 const StartNewWordle: ActionCreator<GameAction> = (game: Game) => {
   return {
@@ -79,16 +73,16 @@ export function dispatchEnter(
           history = [...history, updatedGame[1]];
         }
       }
+
+      const keyboard = colorKeyboard(qwerty, updatedGame[0].lettersUsed);
+
+      const secondKeyboard = isDordle
+        ? colorKeyboard(qwerty, updatedGame[1].lettersUsed)
+        : undefined;
+      // dispatch(setClearInput());
+      dispatch(updateKeyboard(keyboard, secondKeyboard));
+      return dispatch(PressEnter(updatedGame, history));
     }
-
-    const keyboard = colorKeyboard(qwerty, updatedGame[0].lettersUsed);
-
-    const secondKeyboard = isDordle
-      ? colorKeyboard(qwerty, updatedGame[1].lettersUsed)
-      : undefined;
-    // dispatch(setClearInput());
-    dispatch(setUpdateKeyboard(keyboard, secondKeyboard));
-    return dispatch(PressEnter(updatedGame, history));
   };
 }
 
@@ -98,18 +92,15 @@ export function startGame(
   index?: number,
   secondIndex?: number
 ) {
-  return (dispatch: Dispatch<GameAction>) => {
-    dispatch(toggleDrawer(false));
-    dispatch(setUpdateKeyboard(qwerty, undefined));
+  return async (dispatch: Dispatch<GameAction>) => {
+    dispatch(updateKeyboard(qwerty, undefined));
 
     if (isWordle) {
-      createGames(gameMode, isWordle, index).then((game) =>
-        dispatch(StartNewWordle(game[0]))
-      );
+      const game = await createGames(gameMode, isWordle, index);
+      return dispatch(StartNewWordle(game[0]));
     }
-    createGames(gameMode, isWordle, index, secondIndex).then((game) =>
-      dispatch(StartNewDordle(game))
-    );
+    const game_1 = await createGames(gameMode, isWordle, index, secondIndex);
+    return dispatch(StartNewDordle(game_1));
   };
 }
 
@@ -134,10 +125,11 @@ const createGames = async (
   }
 };
 
-const complementGame = (definition: Definition, game: Game): Game => {
+const complementGame = (definition: FullDefinition, game: Game): Game => {
   return {
     ...game,
     hint: definition.definition,
     partOfSpeech: definition.partOfSpeech,
+    extraInfo: definition.extraInfo,
   };
 };

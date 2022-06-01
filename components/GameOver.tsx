@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import Button from '../elements/Button';
 import { GameResultMsg } from '../elements/ResultMessage';
-import { chooseGame } from '../redux/actions/app.actions';
+import { chooseGame, chooseGameType } from '../redux/actions/app.actions';
 import { startGame } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
 import { gameEnum, mode } from '../utils/types';
@@ -31,7 +31,7 @@ const GameOverView = () => {
             pressHandler={() => dispatch(startGame(isWordle, mode.normal))}
             content={'Play Again'}
             extraContent={'Normal'}
-            style={styles.normalButton}
+            style={[styles.button, styles.normalButton]}
           />
 
           {isWordle && (
@@ -39,18 +39,17 @@ const GameOverView = () => {
               pressHandler={() => dispatch(startGame(isWordle, mode.hard))}
               content={'Play Again'}
               extraContent={'Hard'}
-              style={styles.hardButton}
+              style={[styles.button, styles.hardButton]}
             />
           )}
+
+          <Button
+            pressHandler={() => dispatch(chooseGameType(gameEnum.quit))}
+            content={"That's enough"}
+            style={[styles.button, styles.quit]}
+          />
         </View>
       }
-      <View style={styles.quitOption}>
-        <Button
-          pressHandler={() => dispatch(chooseGame(gameEnum.quit))}
-          content={"That's enough"}
-          style={styles.quit}
-        />
-      </View>
     </View>
   );
 };
@@ -59,38 +58,26 @@ export default GameOverView;
 
 const styles = StyleSheet.create({
   normalButton: {
-    marginBottom: 20,
-    flex: 1,
-    alignItems: 'center',
     backgroundColor: '#44AACC',
-    justifyContent: 'center',
   },
 
   hardButton: {
-    marginBottom: 20,
-    flex: 1,
-    alignItems: 'center',
     backgroundColor: '#338899',
-    borderRadius: 2,
-    justifyContent: 'center',
   },
 
   options: {
     flex: 2,
     flexDirection: 'row',
-    alignContent: 'center',
+    alignContent: 'space-between',
   },
   quit: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignContent: 'center',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-  },
-  quitOption: {
-    flex: 1,
-    borderRadius: 8,
     backgroundColor: '#94BFD2',
+  },
+  button: {
+    margin: 5,
+    alignItems: 'center',
+    borderRadius: 8,
+    justifyContent: 'center',
+    flex:1
   },
 });
