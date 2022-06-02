@@ -1,12 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import BackButton from '../elements/BackButton';
+import Button from '../elements/Button';
+import { setSavedHistory } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
-import { gameToString, gameWonIn, generateStats } from '../utils/lib';
+import { setHistory } from '../utils/asyncStorage';
+import { gameToString, gameWonIn, generateStats } from '../utils/game.lib';
 
 const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
   const { gameHistory } = useSelector((state: RootState) => state.game);
+  const dispatch = useDispatch();
   gameHistory.map((game) => {
     console.log(gameToString(game));
   });
@@ -41,6 +46,10 @@ const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
           </View>
         )}
       </View>
+      <Button
+        content="Reset history"
+        pressHandler={() =>{ dispatch(setSavedHistory([])); setHistory([])}}
+      />
     </View>
   );
 };

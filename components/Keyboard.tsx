@@ -2,7 +2,7 @@ import React, {  } from 'react';
 import { StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import {
   generateCharArray,
-} from '../utils/lib';
+} from '../utils/game.lib';
 import { BackSpaceKey, EmptyKey, ReturnKey } from '../utils/specialKeys';
 import { Letter, Reset } from '../utils/types';
 import KeyRows from '../elements/KeyRows';

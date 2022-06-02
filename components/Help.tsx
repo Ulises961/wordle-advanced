@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import BackButton from '../elements/BackButton';
-import { commandDescriptions } from '../utils/lib';
+import { commandDescriptions } from '../utils/game.lib';
 
 const Help = ({ onClose }: { onClose: () => void }): JSX.Element => {
   return (

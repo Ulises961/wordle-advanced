@@ -35,7 +35,7 @@ const Hints = ({ game, index }: { game: Game; index: number }) => {
             : ''}
         </Text>
       </View>
-      {6 - game.attempts.length === 1 && (
+      {1 - game.attempts.length === 1 && (
         <View>
           <Button
             pressHandler={() => desperateHintHandler(index)}
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderRadius: 5,
     marginBottom: 10,
+    maxWidth:250
   },
   hints: {
     width: '90%',

@@ -12,6 +12,8 @@ import {
   CURSOR_TO_START,
   SET_SECOND_NUMBER,
   CLEAR_INPUT,
+  SET_HISTORY,
+  Game,
 } from '../../utils/types';
 import { GameAction } from '../types/action.types';
 
@@ -19,7 +21,6 @@ export const updateKeyboard: ActionCreator<GameAction> = (
   keyboard: Letter[],
   secondKeyboard: Letter[] | undefined
 ) => {
-
   return {
     type: UPDATE_KEYBOARD,
     payload: { keyboard: keyboard, secondKeyboard: secondKeyboard },
@@ -65,11 +66,12 @@ const setSecondNumber: ActionCreator<GameAction> = (
 export const cursorToStart: ActionCreator<GameAction> = () => {
   return {
     type: CURSOR_TO_START,
-
   };
 };
 
-export const chooseGameType: ActionCreator<GameAction> = (gametype: gameEnum) => {
+export const chooseGameType: ActionCreator<GameAction> = (
+  gametype: gameEnum
+) => {
   return {
     type: GAME_TYPE,
     payload: gametype,
@@ -98,8 +100,6 @@ export function insertLetter(
     return dispatch(insertDeleteLetter(updatedSlot, updatedAttempt));
   };
 }
-
-
 
 export function deleteLetter(currentSlot: number, attempt: Letter[]) {
   return (dispatch: Dispatch<GameAction>) => {
@@ -177,4 +177,3 @@ export function insertNumber(
       : dispatch(setSecondNumber(updatedAttempt, updatedSlot));
   };
 }
-

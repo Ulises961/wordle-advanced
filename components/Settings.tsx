@@ -17,7 +17,7 @@ import {
 } from '../redux/actions/app.actions';
 import { startGame } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
-import { emptyNumber } from '../utils/lib';
+import { emptyNumber } from '../utils/game.lib';
 import { Game, gameEnum, mode } from '../utils/types';
 import AnswerSetter from './AnswerSetter';
 import Help from './Help';

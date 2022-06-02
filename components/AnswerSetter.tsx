@@ -12,7 +12,7 @@ import BackButton from '../elements/BackButton';
 import InputRow from '../elements/InputRow';
 import Key from '../elements/Key';
 import { LeftArrow, ReturnKey, RightArrow } from '../utils/specialKeys';
-import { emptyNumber, parseNumber } from '../utils/lib';
+import { emptyNumber, parseNumber } from '../utils/game.lib';
 import { mode, Letter, Reset, gameEnum, CLOSE_DRAWER } from '../utils/types';
 import { Keypad } from './Keyboard';
 import { useSelector } from 'react-redux';

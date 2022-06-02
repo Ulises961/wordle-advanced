@@ -1,4 +1,4 @@
-import { toString } from '../utils/lib';
+import { toString } from '../utils/game.lib';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';

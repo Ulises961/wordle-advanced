@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {  } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,13 +9,11 @@ import {
   ViewStyle,
 } from 'react-native';
 import GameScreen from './GameScreen';
-import { newGame } from '../utils/lib';
 import Settings from '../components/Settings';
-import { Game, gameEnum, mode } from '../utils/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
 import { useDispatch } from 'react-redux';
-import { toggleDrawer } from '../redux/actions/app.actions';
+import { openCloseDrawer } from '../redux/actions/app.actions';
 
 const Dordle = () => {
   const screenWidth = useWindowDimensions().width;
@@ -33,7 +31,7 @@ const Dordle = () => {
   ) : (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => dispatch(toggleDrawer(!drawerOpen))}>
+        <TouchableOpacity onPress={() => dispatch(openCloseDrawer(!drawerOpen))}>
           <Text style={styles.hamburger}>≡</Text>
         </TouchableOpacity>
       </View>

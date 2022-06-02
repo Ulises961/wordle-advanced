@@ -59,6 +59,7 @@ export default GameOverView;
 const styles = StyleSheet.create({
   normalButton: {
     backgroundColor: '#44AACC',
+
   },
 
   hardButton: {
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     justifyContent: 'center',
-    flex:1
+    flex:1,
+    maxHeight:50,
   },
 });

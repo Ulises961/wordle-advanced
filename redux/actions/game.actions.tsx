@@ -4,14 +4,14 @@ import {
   playGame,
   processInput,
   qwerty,
-  retrieveDefinition,
-} from '../../utils/lib';
+} from '../../utils/game.lib';
 import {
   ENTER,
   FullDefinition,
   Game,
   Letter,
   mode,
+  SET_HISTORY,
   START_NEW_DORDLE,
   START_NEW_WORDLE,
 } from '../../utils/types';
@@ -19,6 +19,8 @@ import { ActionCreator } from 'redux';
 import { GameAction } from '../types/action.types';
 import { Dispatch } from 'react';
 import { updateKeyboard } from './app.actions';
+import { retrieveDefinition } from '../../utils/api.requests';
+import { getHistory, setHistory } from '../../utils/asyncStorage';
 
 const StartNewWordle: ActionCreator<GameAction> = (game: Game) => {
   return {
@@ -40,6 +42,7 @@ export const PressEnter: ActionCreator<GameAction> = (
   updatedGame: Game[],
   history: Game[]
 ) => {
+ 
   return {
     type: ENTER,
     payload: {
@@ -48,6 +51,11 @@ export const PressEnter: ActionCreator<GameAction> = (
     },
   };
 };
+
+export const setSavedHistory: ActionCreator<GameAction> = (history: Game[]) => {
+  return { type: SET_HISTORY, payload: history };
+};
+
 
 export function dispatchEnter(
   attempt: Letter[],
@@ -80,6 +88,7 @@ export function dispatchEnter(
         ? colorKeyboard(qwerty, updatedGame[1].lettersUsed)
         : undefined;
       // dispatch(setClearInput());
+      setHistory(history);
       dispatch(updateKeyboard(keyboard, secondKeyboard));
       return dispatch(PressEnter(updatedGame, history));
     }
@@ -94,6 +103,9 @@ export function startGame(
 ) {
   return async (dispatch: Dispatch<GameAction>) => {
     dispatch(updateKeyboard(qwerty, undefined));
+    const savedHistory = await getHistory();
+    dispatch(setSavedHistory(savedHistory));
+    
 
     if (isWordle) {
       const game = await createGames(gameMode, isWordle, index);
@@ -103,6 +115,7 @@ export function startGame(
     return dispatch(StartNewDordle(game_1));
   };
 }
+
 
 const createGames = async (
   gameMode: mode,

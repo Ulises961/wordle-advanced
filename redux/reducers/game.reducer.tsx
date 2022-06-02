@@ -1,7 +1,9 @@
-import { gameToString, newGame } from '../../utils/lib';
+import { getHistory } from '../../utils/asyncStorage';
+import { gameToString, newGame } from '../../utils/game.lib';
 import {
   ENTER,
   mode,
+  SET_HISTORY,
   START_NEW_DORDLE,
   START_NEW_WORDLE,
 } from '../../utils/types';
@@ -9,83 +11,7 @@ import { GameAction } from '../types/action.types';
 import { GameState } from '../types/state.types';
 
 const initialGameState: GameState = {
-  currentGame: [
-    //   {
-    //   "numberOfAttempts": 0,
-    //   "answer": [
-    //     {
-    //       "character": "A",
-    //       "index": 0,
-    //       "color": "cyan"
-    //     },
-    //     {
-    //       "character": "G",
-    //       "index": 1,
-    //       "color": "cyan"
-    //     },
-    //     {
-    //       "character": "O",
-    //       "index": 2,
-    //       "color": "cyan"
-    //     },
-    //     {
-    //       "character": "R",
-    //       "index": 3,
-    //       "color": "cyan"
-    //     },
-    //     {
-    //       "character": "A",
-    //       "index": 4,
-    //       "color": "cyan"
-    //     }
-    //   ],
-    //   "guessed": false,
-    //   "lettersUsed": [],
-    //   "attempts": [],
-    //   "mode": 1,
-    //   "id": "2182321e-b485-4f5d-abe0-128decd1a4e7",
-    //   "hint": "a place of assembly for the people in ancient Greece",
-    //   "partOfSpeech": "noun"
-    // },
-    {
-      numberOfAttempts: 0,
-      answer: [
-        {
-          character: 'A',
-          index: 0,
-          color: 'cyan',
-        },
-        {
-          character: 'G',
-          index: 1,
-          color: 'cyan',
-        },
-        {
-          character: 'O',
-          index: 2,
-          color: 'cyan',
-        },
-        {
-          character: 'R',
-          index: 3,
-          color: 'cyan',
-        },
-        {
-          character: 'A',
-          index: 4,
-          color: 'cyan',
-        },
-      ],
-      guessed: true,
-      lettersUsed: [],
-      attempts: [],
-      mode: 1,
-      id: '2182321e-b485-4f5d-abe0-128decd1a4e7',
-      hint: 'a place of assembly for the people in ancient Greece',
-      partOfSpeech: 'noun',
-      extraInfo:'Oh no, no extra info available'
-    },
-  ],
+  currentGame: [],
   gameHistory: [],
 };
 
@@ -94,9 +20,12 @@ export function gameReducer(
   action: GameAction
 ): GameState {
   switch (action.type) {
+    case SET_HISTORY:
+      return {
+        ...state,
+        gameHistory: [...action.payload],
+      };
     case START_NEW_WORDLE:
-      console.log('game reducer new wordle', action.payload);
-
       return {
         currentGame: [action.payload],
         gameHistory: [...state.gameHistory, ...state.currentGame],

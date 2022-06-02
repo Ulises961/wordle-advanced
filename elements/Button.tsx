@@ -24,7 +24,7 @@ const Button = ({
     <TouchableOpacity onPress={pressHandler} style={style}>
       <View style={styles.backButton}>
         <Text style={[styles.backButtonText, contentStyle]}>
-          {content}{' '}
+          {content}{'\n'}
           {extraContent ? (
             <Text style={styles.regularText}> {extraContent}</Text>
           ) : null}
@@ -36,7 +36,7 @@ const Button = ({
 
 const styles = StyleSheet.create({
   backButton: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     padding: 1,
   },
 
@@ -44,8 +44,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 15,
-    paddingLeft: 10,
-    textAlign:'center'
+    textAlign:'center',
   },
   regularText: {
     fontSize: 15,

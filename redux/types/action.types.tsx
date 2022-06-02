@@ -9,6 +9,7 @@ import {
   GAME_TYPE,
   INS_DEL,
   Letter,
+  SET_HISTORY,
   SET_NUMBER,
   SET_SECOND_NUMBER,
   START_NEW_DORDLE,
@@ -69,6 +70,10 @@ export interface SetCursorToStart {
 export interface ClearInput {
   type: typeof CLEAR_INPUT;
 }
+export interface setSavedHistory {
+  type: typeof SET_HISTORY;
+  payload: Game[];
+}
 
 export type GameAction =
   | PressEnterAction
@@ -76,7 +81,7 @@ export type GameAction =
   | StartNewDordleAction
   | StartNewWordleAction
   | CloseDrawerAction
-
+  | setSavedHistory
   | GameType
   | SetNumber
   | SetSecondNumber

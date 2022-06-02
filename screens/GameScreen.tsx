@@ -61,11 +61,11 @@ const GameScreen = () => {
     }
   };
   const isGameOver =
-    (currentGame[0].guessed &&
+    (currentGame[0]?.guessed &&
       (currentGame[1] === undefined ||
-        currentGame[1].guessed ||
-        currentGame[1].numberOfAttempts > 5)) ||
-    currentGame[0].numberOfAttempts > 5;
+        currentGame[1]?.guessed ||
+        currentGame[1]?.numberOfAttempts > 5)) ||
+    currentGame[0]?.numberOfAttempts > 5;
 
   const portrait = screenHeight > screenWidth;
   const portraitStyle: ViewStyle = {

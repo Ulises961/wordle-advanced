@@ -23,7 +23,7 @@ export interface Game {
   id: string;
   hint: string;
   partOfSpeech: string;
-  extraInfo:string
+  extraInfo: string;
 }
 export interface Stats {
   'Guessed in 1': number;
@@ -78,4 +78,5 @@ export const SET_NUMBER = 'SET_NUMBER';
 export const SET_SECOND_NUMBER = 'SET_SECOND_NUMBER';
 export const UPDATE_KEYBOARD = 'UPDATE_KEYBOARD';
 export const CURSOR_TO_START = 'CURSOR_TO_START';
+export const SET_HISTORY = 'SET_HISTORY';
 export const CLEAR_INPUT = 'CLEAR_INPUT';

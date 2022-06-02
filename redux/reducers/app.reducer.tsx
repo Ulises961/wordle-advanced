@@ -1,4 +1,4 @@
-import { emptyNumber, emptyWord, qwerty } from '../../utils/lib';
+import { emptyNumber, emptyWord, qwerty } from '../../utils/game.lib';
 import {
   CLOSE_DRAWER,
   INS_DEL,
@@ -19,7 +19,7 @@ const initialAppState: AppState = {
   keyboard: qwerty,
   secondKeyboard: undefined,
   attempt: [],
-  gameType: gameEnum.wordle,
+  gameType: gameEnum.quit,
   answerIndex: emptyNumber,
   secondAnswerIndex: emptyNumber,
 };

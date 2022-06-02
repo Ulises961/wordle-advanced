@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Row from '../elements/Row';
 import React from 'react';
-import { generateEmptyRows } from '../utils/lib';
+import { generateEmptyRows } from '../utils/game.lib';
 import uuid from 'react-native-uuid';
 import { Letter } from '../utils/types';
 import { useSelector } from 'react-redux';
