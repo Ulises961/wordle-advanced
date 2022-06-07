@@ -6,6 +6,8 @@ const BackButton = ({pressHandler}: {pressHandler: () => void}) => {
   const styles = StyleSheet.create({
     backButton: {
       width: screenWidth,
+      alignSelf:'flex-start',
+
     },
     backButtonText: {
       color: 'black',
@@ -13,7 +15,9 @@ const BackButton = ({pressHandler}: {pressHandler: () => void}) => {
       fontSize: 25,
       padding: 10,
       textAlign: 'left',
+      alignSelf:'flex-start'
     },
+
   });
   return (
     <Button

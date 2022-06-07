@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Button from '../elements/Button';
 import { Game } from '../utils/types';
 
@@ -21,6 +21,13 @@ const Hints = ({ game, index }: { game: Game; index: number }) => {
     updatedDesperateHints.splice(index, 1, !desperateHint);
     setShowDesperateHints(updatedDesperateHints);
   };
+  // console.log('Game hint', game.partOfSpeech);
+  // console.log('Game desperate hint', game.extraInfo);
+
+  const hiddenHint: ViewStyle = { height: showHints[index] ? undefined : 0 };
+  const hiddenDesperateHint: ViewStyle = {
+    height: desperateHints[index] ? undefined : 0,
+  };
   return (
     <View style={styles.hints}>
       <View>
@@ -29,21 +36,21 @@ const Hints = ({ game, index }: { game: Game; index: number }) => {
           content={'Hint'}
           style={styles.hintButton}
         />
-        <Text>
+        <Text style={hiddenHint}>
           {showHints[index]
-            ? `The word to guess is a(n) ${game.partOfSpeech}`
+            ? `The word to guess is a(n): ${game.partOfSpeech}`
             : ''}
         </Text>
       </View>
-      {1 - game.attempts.length === 1 && (
+      {6 - game.attempts.length === 1 && (
         <View>
           <Button
             pressHandler={() => desperateHintHandler(index)}
             content={'Desperate hint'}
             style={styles.hintButton}
           />
-          <Text>
-            {desperateHints[index] ? `The word to guess is ${game.hint}` : ''}
+          <Text style={hiddenDesperateHint}>
+            {desperateHints[index] ? `${game.extraInfo}` : ''}
           </Text>
         </View>
       )}
@@ -58,8 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2196F3',
     fontWeight: 'bold',
     borderRadius: 5,
-    marginBottom: 10,
-    maxWidth:250
+    maxWidth: 250,
   },
   hints: {
     width: '90%',

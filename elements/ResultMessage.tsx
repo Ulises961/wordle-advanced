@@ -43,8 +43,7 @@ export const GameResultMsg = (): JSX.Element => {
       return (
         <MessageField
           heading="You have lost!"
-          content={`The answer was ${firstAnswer}
-          )}. Its meaning: ${firstAnswerMeaning}`}
+          content={`The answer was ${firstAnswer}. Its meaning: ${firstAnswerMeaning}`}
         />
       );
     }

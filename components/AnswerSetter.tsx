@@ -35,9 +35,6 @@ const AnswerSetter = ({ onClose }: { onClose: () => void }): JSX.Element => {
 
   const { currentSlot, gameType, attempt, answerIndex, secondAnswerIndex } =
     useSelector((state: RootState) => state.app);
-
-  console.log('current slot in Answer Setter', currentSlot);
-
   const dispatch = useDispatch();
   const isWordle = gameType === gameEnum.wordle;
 

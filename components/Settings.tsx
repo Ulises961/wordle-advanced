@@ -15,7 +15,7 @@ import {
   openCloseDrawer,
   setNumber,
 } from '../redux/actions/app.actions';
-import { startGame } from '../redux/actions/game.actions';
+import { quit, startGame } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
 import { emptyNumber } from '../utils/game.lib';
 import { Game, gameEnum, mode } from '../utils/types';
@@ -32,6 +32,7 @@ const Settings = () => {
   const screen: ViewStyle = {
     flex: 1,
     maxWidth: screenWidth,
+    marginTop: 20,
   };
 
   const dispatch = useDispatch();
@@ -40,9 +41,12 @@ const Settings = () => {
   const isWordle = gameType === gameEnum.wordle;
   // console.log('Settings component');
   useEffect(() => {
-    dispatch(setNumber(emptyNumber,0));
+    dispatch(setNumber(emptyNumber, 0));
   }, []);
-
+  const quiteGameHandler = () => {
+    dispatch(quit());
+    dispatch(chooseGameType(gameEnum.quit));
+  };
   switch (showSetting) {
     case 'stats':
       return <Stats onClose={() => chooseSettingHandler('')} />;
@@ -98,7 +102,7 @@ const Settings = () => {
               />
               <Button
                 style={styles.button}
-                pressHandler={() => dispatch(chooseGameType(gameEnum.quit))}
+                pressHandler={quiteGameHandler}
                 content={'Quit'}
                 contentStyle={styles.buttonText}
               />

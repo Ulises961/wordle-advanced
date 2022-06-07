@@ -15,42 +15,46 @@ export const retrieveDefinition = async (
         'X-RapidAPI-Key': '745aca47d5msh4c5315e5cc88834p151353jsn9afe9a658e08',
       },
     };
-  
-    const definition: PartialDefinition[] = await fetch(
+    const noInfoMsg = "Sorry we couldn't get any more help!";
+    let definitions: PartialDefinition[];
+
+    let res =   await fetch(
       definition_endpoint,
       options
-    )
-      .then((res) => res.json())
-      .then((parsedRes): PartialDefinition[] => parsedRes.definitions);
+    );
+    let  parsedRes = await res.json()
+
+    definitions= parsedRes.definitions.length === 0 ? [{definitions:noInfoMsg, partOfSpeech:noInfoMsg }]:parsedRes.definitions;
+
+    // console.log('definitions', definitions);
   
-    console.log('definition', definition);
-  
-    let res = await fetch(synonym_endpoint, options);
-    let parsedRes = await res.json();
-    const synonym = (await parsedRes.synonym[0])
+    res = await fetch(synonym_endpoint, options);
+    parsedRes = await res.json();
+    const synonym:string|undefined = (await parsedRes.synonym[0])
       ? parsedRes.synonym[0]
       : undefined;
   
-    console.log('synonym', synonym);
+    // console.log('synonym', synonym);
   
     res = await fetch(similarTo_endpoint, options);
     parsedRes = await res.json();
-    const similarTo = (await parsedRes.similarTo[0])
+    const similarTo:string|undefined = (await parsedRes.similarTo[0])
       ? parsedRes.similarTo[0]
       : undefined;
   
-    console.log('similarTo', similarTo);
+    // console.log('similarTo', similarTo);
   
-    let extraInfo =
+    let extraInfo:string =
       synonym ||
       similarTo ||
-      definition[1]?.definition ||
-      "Sorry we couldn't get any more help!";
+      definitions[1]?.definition ||
+      noInfoMsg;
   
-  
+    console.log('second definition is... ',definitions[1]?.definition||noInfoMsg);
+    
     return {
-      definition: definition[0].definition,
-      partOfSpeech: definition[0].partOfSpeech,
+      definition: definitions[0]?.definition,
+      partOfSpeech: definitions[0]?.partOfSpeech,
       extraInfo: extraInfo,
     };
   };

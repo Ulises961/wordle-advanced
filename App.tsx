@@ -1,6 +1,7 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import React from 'react';
 import {
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,13 +13,14 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Provider } from 'react-redux';
 import { chooseGameType } from './redux/actions/app.actions';
-import { startGame } from './redux/actions/game.actions';
+import { setSavedHistory, startGame } from './redux/actions/game.actions';
 import { RootState } from './redux/combineReducer';
 import store from './redux/store';
 import { GameAction } from './redux/types/action.types';
 import Dordle from './screens/Dordle';
 
 import Wordle from './screens/Wordle';
+import { getHistory } from './utils/asyncStorage';
 import { gameEnum, mode } from './utils/types';
 
 const App = () => {
@@ -26,15 +28,21 @@ const App = () => {
   const screenHeight = useWindowDimensions().height;
   const main: ViewStyle = {
     height: screenHeight > screenWidth ? screenHeight : screenWidth,
-    margin: 20,
+    margin: 40,
     flex: 1,
     justifyContent: 'space-around',
   };
 
   const dispatch = useDispatch<Dispatch<GameAction>>();
   const { gameType } = useSelector((state: RootState) => state.app);
-  console.log('app.js');
+  // console.log('app.js');
   const isWordle = true;
+  const choosGameHandler = async (isWordle: boolean, gameChosen: gameEnum) => {
+    const savedHistory = await getHistory();
+    dispatch(setSavedHistory(savedHistory));
+    dispatch(startGame(isWordle, mode.normal));
+    dispatch(chooseGameType(gameChosen));
+  };
 
   switch (gameType) {
     case gameEnum.wordle:
@@ -47,10 +55,7 @@ const App = () => {
           <Text style={styles.h1}>Welcome to Wordle</Text>
           <TouchableOpacity
             onPress={() => {
-              console.log(gameEnum.wordle);
-
-              dispatch(startGame(isWordle, mode.normal));
-              dispatch(chooseGameType(gameEnum.wordle));
+              choosGameHandler(isWordle, gameEnum.wordle);
             }}
             style={styles.button}
           >
@@ -60,10 +65,7 @@ const App = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              console.log(gameEnum.dordle);
-
-              dispatch(startGame(!isWordle, mode.normal));
-              dispatch(chooseGameType(gameEnum.dordle));
+              choosGameHandler(!isWordle, gameEnum.dordle);
             }}
             style={styles.button}
           >

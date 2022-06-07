@@ -3,6 +3,7 @@ import { Game } from './types';
 
 export const setHistory = async (history: Game[]) => {
   try {
+    history = cleanHistory(history);
     const jsonValue = JSON.stringify(history);
     await AsyncStorage.setItem('gameHistory', jsonValue).catch((e) =>
       console.error(e)
@@ -29,3 +30,8 @@ export const getHistory = async (): Promise<Game[]> => {
   console.log('Done getting history.');
   return [];
 };
+
+
+const cleanHistory = (games:Game[]):Game[]=>{
+ return games.map(game=>{return {...game, lettersUsed: []}})
+}

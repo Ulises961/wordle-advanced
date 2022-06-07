@@ -80,3 +80,4 @@ export const UPDATE_KEYBOARD = 'UPDATE_KEYBOARD';
 export const CURSOR_TO_START = 'CURSOR_TO_START';
 export const SET_HISTORY = 'SET_HISTORY';
 export const CLEAR_INPUT = 'CLEAR_INPUT';
+export const QUIT = 'QUIT';

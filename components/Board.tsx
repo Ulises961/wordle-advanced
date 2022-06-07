@@ -1,7 +1,6 @@
 import {
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   View,
   ViewStyle,
@@ -11,8 +10,6 @@ import React from 'react';
 import { generateEmptyRows } from '../utils/game.lib';
 import uuid from 'react-native-uuid';
 import { Letter } from '../utils/types';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/combineReducer';
 
 const Gameboard = ({
   attempts,

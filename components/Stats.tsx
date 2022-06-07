@@ -13,7 +13,7 @@ const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
   const { gameHistory } = useSelector((state: RootState) => state.game);
   const dispatch = useDispatch();
   gameHistory.map((game) => {
-    console.log(gameToString(game));
+    console.log('Stats:', gameToString(game));
   });
 
   const stats = generateStats(gameHistory);
@@ -48,7 +48,10 @@ const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
       </View>
       <Button
         content="Reset history"
-        pressHandler={() =>{ dispatch(setSavedHistory([])); setHistory([])}}
+        pressHandler={() => {
+          dispatch(setSavedHistory([]));
+          setHistory([]);
+        }}
       />
     </View>
   );
@@ -78,17 +81,19 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     padding: 10,
     margin: 2,
+    
   },
   value: {
     padding: 16,
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
+
   },
   main: {
     flex: 1,
-    alignContent: 'center',
-    justifyContent: 'center',
+    marginTop: 40,
+    width:'100%'
+
   },
 
   normalText: {
@@ -97,13 +102,14 @@ const styles = StyleSheet.create({
 
   stats: {
     flex: 9,
-    justifyContent: 'flex-start',
-    alignSelf: 'center',
+    justifyContent: 'center',
+    width:'100%'
+    
+
   },
   values: {
     marginBottom: 10,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignSelf: 'center',
+    width:'100%'
+
   },
 });

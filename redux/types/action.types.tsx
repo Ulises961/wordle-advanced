@@ -9,6 +9,7 @@ import {
   GAME_TYPE,
   INS_DEL,
   Letter,
+  QUIT,
   SET_HISTORY,
   SET_NUMBER,
   SET_SECOND_NUMBER,
@@ -74,6 +75,9 @@ export interface setSavedHistory {
   type: typeof SET_HISTORY;
   payload: Game[];
 }
+export interface quit {
+  type: typeof QUIT;
+}
 
 export type GameAction =
   | PressEnterAction
@@ -87,4 +91,5 @@ export type GameAction =
   | SetSecondNumber
   | SetCursorToStart
   | ClearInput
+  | quit
   | UpdateKeyboardAction;

@@ -1,12 +1,5 @@
-import { is } from '@reduxjs/toolkit/node_modules/immer/dist/internal';
-import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-  ViewStyle,
-} from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
 import uuid from 'react-native-uuid';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -14,13 +7,11 @@ import Gameboard from '../components/Board';
 import GameOverView from '../components/GameOver';
 import Hints from '../components/Hints';
 import { Keyboard } from '../components/Keyboard';
-import Button from '../elements/Button';
 import InputRow from '../elements/InputRow';
 import {
   clearInput,
   deleteLetter,
   insertLetter,
- 
 } from '../redux/actions/app.actions';
 import { dispatchEnter } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
@@ -35,8 +26,7 @@ const GameScreen = () => {
   const { attempt, gameType, keyboard, secondKeyboard, currentSlot } =
     useSelector((state: RootState) => state.app);
 
-  const { currentGame } = useSelector((state: RootState) => state.game);
-  console.log('Game screen currentGame', currentGame);
+  const { currentGame,gameHistory } = useSelector((state: RootState) => state.game);
 
   const isDordle = gameType === gameEnum.dordle;
   useEffect(() => {
@@ -53,19 +43,19 @@ const GameScreen = () => {
         break;
       //return key
       case '\u23CE':
-        dispatch(dispatchEnter(attempt, currentGame, isDordle));
+        dispatch(dispatchEnter(attempt, currentGame, gameHistory, isDordle));
 
         break;
       default:
         dispatch(insertLetter(letter, currentSlot, attempt));
     }
   };
+  const firstGameIsOver =
+    currentGame[0]?.guessed || currentGame[0]?.numberOfAttempts > 5;
+  const secondGameIsOver =
+    currentGame[1]?.guessed || currentGame[1]?.numberOfAttempts > 5;
   const isGameOver =
-    (currentGame[0]?.guessed &&
-      (currentGame[1] === undefined ||
-        currentGame[1]?.guessed ||
-        currentGame[1]?.numberOfAttempts > 5)) ||
-    currentGame[0]?.numberOfAttempts > 5;
+    (firstGameIsOver && secondGameIsOver) || (!isDordle && firstGameIsOver);
 
   const portrait = screenHeight > screenWidth;
   const portraitStyle: ViewStyle = {
@@ -139,7 +129,6 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
     marginBottom: 8,
-    backgroundColor: 'orange',
   },
 });
 

@@ -143,7 +143,7 @@ export const sortByIndex = (word: Letter[]): Letter[] => {
 /**
  *
  * @param letter each letter of the qwerty keyboard
- * @param word the guess of the user that has already been colored against the answer of the current game
+ * @param lettersUsed the letters that have already been colored
  * @returns the updated qwerty with the colors of the new guess added
  */
 export const copyColor = (letter: Letter, lettersUsed: Letter[]): Letter => {
@@ -227,7 +227,7 @@ export const updateGame = (game: Game, parsedGuess: Letter[]): Game => {
 
   const updatedNumberOfAttempts = game.numberOfAttempts + 1;
   const updatedAttempts = [...game.attempts, reorderedWord];
-
+   
   return {
     ...game,
     attempts: updatedAttempts,
@@ -358,7 +358,6 @@ const reduceWord = (
  *
  * @param guess the user guess
  * @param answer the answer of the current game
- * @param coloredWord the accumulator that will be returned at the end of the method
  * @returns coloredWord
  * Sorts the words alphabetically and check for equality between characters,
  * if character and index in a word match the letter is green, yellow if it only matches in charcter
@@ -603,17 +602,14 @@ export const toString = (word: Letter[]): string => {
   return st;
 };
 export const gameToString = (game: Game): string => {
-  let attemptsString = '';
   return `Answer: ${toString(game.answer)},
   Letters used: ${toString(game.lettersUsed)},
   Atempts tried: ${game.attempts.map(
     (attempt) =>
-      (attemptsString = attemptsString
-        .concat(toString(attempt))
-        .concat(',\n'))
-  )},
+      toString(attempt))},
   Guessed ${game.guessed ? 'Yes' : 'No'},
-  Mode: ${game.mode === 0 ? 'Hard' : 'Easy'}
+  Mode: ${game.mode === 0 ? 'Hard' : 'Easy'},
+  Number of attempts: ${game.numberOfAttempts}
   `;
 };
 export const parseNumber = (word: Letter[]) => {
@@ -646,4 +642,28 @@ export const gameWonIn = (guessedIn: number, gamesPlayed: number) => {
   return isNaN(guessedIn / gamesPlayed)
     ? 0
     : ((guessedIn / gamesPlayed) * 100).toFixed(1);
+};
+
+export const gameToShare = (attempts: Letter[][]): string => {
+  let sharedString = '';
+  attempts.map((attempt: Letter[]) => {
+    attempt.map((letter: Letter) => {
+      sharedString = sharedString.concat(colorToEmoji(letter.color));
+    });
+    sharedString = sharedString.concat('\n');
+  });
+  return sharedString;
+};
+
+export const colorToEmoji = (color: string): string => {
+  switch (color) {
+    case BgYellow:
+      return '🟨';
+    case BgGreen:
+      return '🟩';
+    case BgRed:
+      return '🟥';
+    default:
+      return '⬜';
+  }
 };
