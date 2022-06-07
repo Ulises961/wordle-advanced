@@ -50,7 +50,6 @@ export const retrieveDefinition = async (
       definitions[1]?.definition ||
       noInfoMsg;
   
-    console.log('second definition is... ',definitions[1]?.definition||noInfoMsg);
     
     return {
       definition: definitions[0]?.definition,

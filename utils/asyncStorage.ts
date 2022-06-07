@@ -8,7 +8,7 @@ export const setHistory = async (history: Game[]) => {
     await AsyncStorage.setItem('gameHistory', jsonValue).catch((e) =>
       console.error(e)
     );
-    console.log('Values saved in history is', jsonValue);
+    // console.log('Values saved in history is', jsonValue);
   } catch (e) {
     // save error
   }
@@ -21,7 +21,7 @@ export const getHistory = async (): Promise<Game[]> => {
     const jsonValue = await AsyncStorage.getItem('gameHistory');
     const historyRetrieved = jsonValue != null ? JSON.parse(jsonValue) : [];
 
-    console.log('History retrieved.', historyRetrieved);
+    // console.log('History retrieved.', historyRetrieved);
     return historyRetrieved;
   } catch (e) {
     // read error

@@ -12,9 +12,9 @@ import { gameToString, gameWonIn, generateStats } from '../utils/game.lib';
 const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
   const { gameHistory } = useSelector((state: RootState) => state.game);
   const dispatch = useDispatch();
-  gameHistory.map((game) => {
-    console.log('Stats:', gameToString(game));
-  });
+  // gameHistory.map((game) => {
+  //   console.log('Stats:', gameToString(game));
+  // });
 
   const stats = generateStats(gameHistory);
 
@@ -25,7 +25,7 @@ const Stats = ({ onClose }: { onClose: () => void }): JSX.Element => {
         {gameHistory.length > 0 ? (
           <View style={styles.values}>
             {Object.entries(stats).map(([key, value]) => {
-              console.log(key, value);
+              // console.log(key, value);
 
               return (
                 <GameStat

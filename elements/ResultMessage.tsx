@@ -23,7 +23,9 @@ export const GameResultMsg = (): JSX.Element => {
       return (
         <MessageField
           heading="Not so bad!"
-          content=" One out of two is still a success!"
+          content={` One out of two is still a success! THe missing answer was ${
+            currentGame[0].guessed ? secondAnswer : firstAnswer
+          }`}
         />
       );
     } else {

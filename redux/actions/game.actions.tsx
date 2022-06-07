@@ -34,7 +34,7 @@ const StartNewWordle: ActionCreator<GameAction> = (game: Game) => {
 };
 
 export const StartNewDordle: ActionCreator<GameAction> = (games: Game[]) => {
-  console.log('starting new wordle in mode', mode);
+  // console.log('starting new wordle in mode', mode);
 
   return {
     type: START_NEW_DORDLE,
@@ -100,7 +100,7 @@ export function dispatchEnter(
         : undefined;
 
       dispatch(updateKeyboard(keyboard, secondKeyboard));
-      console.log('Updated game on press enter ', gameToString(updatedGame[0]));
+    
       
       return dispatch(PressEnter(updatedGame, history));
     }
