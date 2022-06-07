@@ -9,8 +9,8 @@ export const GameResultMsg = (): JSX.Element => {
   const guessedBoth = currentGame[0].guessed && currentGame[1]?.guessed;
 
   const guessedOnlyOne =
-    (currentGame[0].guessed && !currentGame[1]?.guessed) ||
-    (!currentGame[0].guessed && currentGame[1]?.guessed);
+    (currentGame[0].guessed && (!currentGame[1]?.guessed || currentGame[1]?.numberOfAttempts>5)) ||
+    ((!currentGame[0].guessed || currentGame[0].numberOfAttempts>5) && currentGame[1]?.guessed);
 
   const firstAnswer = toString(currentGame[0].answer);
   const secondAnswer = toString(currentGame[0]?.answer);
@@ -23,7 +23,7 @@ export const GameResultMsg = (): JSX.Element => {
       return (
         <MessageField
           heading="Not so bad!"
-          content={` One out of two is still a success! THe missing answer was ${
+          content={` One out of two is still a success! The missing answer was ${
             currentGame[0].guessed ? secondAnswer : firstAnswer
           }`}
         />

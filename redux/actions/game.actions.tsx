@@ -135,7 +135,7 @@ const createGames = async (
   index?: number,
   secondIndex?: number
 ): Promise<Game[]> => {
-  const game = newGame(gameMode, 0);
+  const game = newGame(gameMode, index);
   const completeGameOne = await retrieveDefinition(game.answer).then(
     (definition) => complementGame(definition, game)
   );
