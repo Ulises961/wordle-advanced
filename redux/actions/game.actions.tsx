@@ -58,37 +58,40 @@ export const PressEnter: ActionCreator<GameAction> = (
 export const setSavedHistory: ActionCreator<GameAction> = (history: Game[]) => {
   return { type: SET_HISTORY, payload: history };
 };
-export const quit: ActionCreator<GameAction> = (
-) => {
+export const quit: ActionCreator<GameAction> = () => {
   return {
     type: QUIT,
   };
 };
 
-
 export function dispatchEnter(
   attempt: Letter[],
   currentGame: Game[],
-  gameHistory:Game[],
+  gameHistory: Game[],
   isDordle: boolean
 ) {
   return (dispatch: Dispatch<GameAction>) => {
     const isInputOk = processInput(attempt);
-    let history: Game[] =[...gameHistory];
+    let history: Game[] = [...gameHistory];
     const updatedGame: Game[] = [];
-
 
     if (isInputOk) {
       updatedGame[0] = playGame(attempt, currentGame[0]);
 
-      if ((updatedGame[0].numberOfAttempts > 5 || updatedGame[0].guessed) && !findInHistory(currentGame[0].id,history) ) {
+      if (
+        (updatedGame[0].numberOfAttempts > 5 || updatedGame[0].guessed) &&
+        !findInHistory(currentGame[0].id, history)
+      ) {
         history = [...history, updatedGame[0]];
       }
 
       if (isDordle) {
         updatedGame[1] = playGame(attempt, currentGame[1]);
 
-        if ((updatedGame[1].numberOfAttempts > 5 || updatedGame[1].guessed)&& !findInHistory(currentGame[1].id,history)) {
+        if (
+          (updatedGame[1].numberOfAttempts > 5 || updatedGame[1].guessed) &&
+          !findInHistory(currentGame[1].id, history)
+        ) {
           history = [...history, updatedGame[1]];
         }
       }
@@ -100,13 +103,14 @@ export function dispatchEnter(
         : undefined;
 
       dispatch(updateKeyboard(keyboard, secondKeyboard));
-    
-      
+
       return dispatch(PressEnter(updatedGame, history));
     }
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    return dispatch(clearInput())
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(e=> console.error(e)
+      );
+
+    return dispatch(clearInput());
   };
 }
 
@@ -118,14 +122,18 @@ export function startGame(
 ) {
   return async (dispatch: Dispatch<GameAction>) => {
     dispatch(updateKeyboard(qwerty, undefined));
-    dispatch(openCloseDrawer(false))
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    if (isWordle) {
-      const game = await createGames(gameMode, isWordle, index);
-      return dispatch(StartNewWordle(game[0]));
-    }
-    const game_1 = await createGames(gameMode, isWordle, index, secondIndex);
-    return dispatch(StartNewDordle(game_1));
+    dispatch(openCloseDrawer(false));
+ 
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(e=>console.error(e)
+      );
+  
+      if (isWordle) {
+        const game = await createGames(gameMode, isWordle, index);
+        return dispatch(StartNewWordle(game[0]));
+      }
+      const game_1 = await createGames(gameMode, isWordle, index, secondIndex);
+      return dispatch(StartNewDordle(game_1));
+    
   };
 }
 
@@ -146,18 +154,27 @@ const createGames = async (
     const completeGameTwo = await retrieveDefinition(gameTwo.answer).then(
       (definition) => complementGame(definition, gameTwo)
     );
+    console.log(gameToString(completeGameOne));
+
     return [completeGameOne, completeGameTwo];
   }
 };
 
 const complementGame = (definition: FullDefinition, game: Game): Game => {
+  if (definition)
+    return {
+      ...game,
+      hint: definition.definition,
+      partOfSpeech: definition.partOfSpeech,
+      extraInfo: definition.extraInfo,
+    };
   return {
     ...game,
-    hint: definition.definition,
-    partOfSpeech: definition.partOfSpeech,
-    extraInfo: definition.extraInfo,
+    hint: 'No info available',
+    partOfSpeech: 'No info available',
+    extraInfo: 'No info available',
   };
 };
-const findInHistory = (id:string, history:Game[]):boolean=>{
-  return history.some((game:Game)=> game.id === id)
-}
+const findInHistory = (id: string, history: Game[]): boolean => {
+  return history.some((game: Game) => game.id === id);
+};

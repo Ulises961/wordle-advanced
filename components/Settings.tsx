@@ -42,7 +42,7 @@ const Settings = () => {
   // console.log('Settings component');
   useEffect(() => {
     dispatch(setNumber(emptyNumber, 0));
-  }, []);
+  }, [dispatch]);
   const quiteGameHandler = () => {
     dispatch(quit());
     dispatch(chooseGameType(gameEnum.quit));

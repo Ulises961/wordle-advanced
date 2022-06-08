@@ -83,8 +83,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textBox: {
-    fontSize: 20,
-  },
+ 
 });
 export default Gameboard;

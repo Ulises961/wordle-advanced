@@ -15,6 +15,7 @@ import {
 } from '../redux/actions/app.actions';
 import { dispatchEnter } from '../redux/actions/game.actions';
 import { RootState } from '../redux/combineReducer';
+import { gameToString } from '../utils/game.lib';
 import { Game, Letter, gameEnum } from '../utils/types';
 
 const GameScreen = () => {
@@ -26,14 +27,16 @@ const GameScreen = () => {
   const { attempt, gameType, keyboard, secondKeyboard, currentSlot } =
     useSelector((state: RootState) => state.app);
 
-  const { currentGame,gameHistory } = useSelector((state: RootState) => state.game);
+  const { currentGame, gameHistory } = useSelector(
+    (state: RootState) => state.game
+  );
 
   const isDordle = gameType === gameEnum.dordle;
   useEffect(() => {
     return () => {
       dispatch(clearInput());
     };
-  }, []);
+  }, [dispatch]);
 
   const keyPressHandler = (letter: Letter) => {
     switch (letter.character) {

@@ -27,7 +27,9 @@ const GameOverView = () => {
   };
   // console.log('GameOverView');
   useEffect(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch((e) =>
+      console.error(e)
+    );
   }, []);
 
   const dispatch = useDispatch();
@@ -50,7 +52,7 @@ const GameOverView = () => {
       } else if (result.action === Share.dismissedAction) {
         // dismissed
       }
-    } catch (error: any) {
+    } catch (error) {
       alert(error.message);
     }
   };

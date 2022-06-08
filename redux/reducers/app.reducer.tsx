@@ -41,7 +41,7 @@ export default function appReducer(
         ...state,
         drawerOpen: action.payload.isOpen,
         attempt: emptyWord,
-        currentSlot:0,
+        currentSlot: 0,
       };
 
     case GAME_TYPE:
@@ -61,14 +61,14 @@ export default function appReducer(
       return {
         ...state,
         attempt: [...action.payload.currentNumber],
-        answerIndex: [...action.payload.currentNumber],
+        secondAnswerIndex: [...action.payload.currentNumber],
         currentSlot: action.payload.slot,
       };
 
     case CURSOR_TO_START:
       return {
         ...state,
-        currentSlot:0,
+        currentSlot: 0,
       };
     case CLEAR_INPUT:
       return {

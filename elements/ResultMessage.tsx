@@ -1,4 +1,4 @@
-import { toString } from '../utils/game.lib';
+import { gameToString, toString } from '../utils/game.lib';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/combineReducer';
@@ -11,7 +11,8 @@ export const GameResultMsg = (): JSX.Element => {
   const guessedOnlyOne =
     (currentGame[0].guessed && (!currentGame[1]?.guessed || currentGame[1]?.numberOfAttempts>5)) ||
     ((!currentGame[0].guessed || currentGame[0].numberOfAttempts>5) && currentGame[1]?.guessed);
-
+ 
+  
   const firstAnswer = toString(currentGame[0].answer);
   const secondAnswer = toString(currentGame[0]?.answer);
   const firstAnswerMeaning = currentGame[0].hint;
@@ -24,8 +25,8 @@ export const GameResultMsg = (): JSX.Element => {
         <MessageField
           heading="Not so bad!"
           content={` One out of two is still a success! The missing answer was ${
-            currentGame[0].guessed ? secondAnswer : firstAnswer
-          }`}
+             secondAnswer 
+          },  ${firstAnswer}`}
         />
       );
     } else {
